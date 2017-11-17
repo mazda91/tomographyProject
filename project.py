@@ -52,6 +52,20 @@ class circle:
                 
         return np.linalg.norm(line[last-1] - line[first])
 
+class framework:
+    "domain"
+
+def line(framework, phi,s,dl): #returns a np.array of points corresponding to the projection line at angle phi and length s, given a dl step in the sigmaPhi direction
+                 #TODO : finding the first and last point belonging to the framework
+        thetaPhi = (np.cos(phi),np.sin(phi))
+        sigmaPhi = (-np.sin(phi),np.cos(phi))
+        lstart = 0; lend = 0;
+        while (abs(s*thetaPhi[0] + lstart*dl*sigmaPhi[0]) <= framework.xmax) &  (abs(s*thetaPhi[1] + lstart*dl*sigmaPhi[1]) <= framework.ymax): #finding one extermity
+            lstart = lstart-1
+        while (abs(s*thetaPhi[0] + lend*dl*sigmaPhi[0]) <= framework.xmax) &  (abs(s*thetaPhi[1] + lend*dl*sigmaPhi[1]) <= framework.ymax): #finding one extermity
+            lend = lend+1
+        
+        return np.array([(s*thetaPhi,i*dl*sigmaPhi) for i in range (lstart,lend)]) 
 def test():
     #test isInCircle
     #expected result : True, False, False, False, False
@@ -64,6 +78,13 @@ def test():
     
     #test lengthLineIntersection
     #expected result : 4.0
-    line = np.array([(2,0.25*i) for i in range (0,27)])
-    print(C1.lengthLineIntersection(line))
+    line2 = np.array([(2,0.25*i) for i in range (0,27)])
+    print(C1.lengthLineIntersection(line2))
+    
+    frame = framework()
+    frame.xmax = 10
+    frame.ymax = 10
+    
+    line1 = line(frame, 0 , 5 ,1)
+    return line1
             
