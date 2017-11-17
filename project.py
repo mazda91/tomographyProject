@@ -43,11 +43,14 @@ class circle:
             first = first + 1
             
         last = first
-        while (self.isInCircle(line[last])):
+        while ((last < len(line)-1) & self.isInCircle(line[last]) ): #if the last element of the line is in the circle, it is not taken into account
             last = last + 1
         
-        return np.linalg.norm(line[last] - line[first])
-    
+        if (last == (len(line)-1)): #special if to take into account the last element if necessary
+            if self.isInCircle(line[last]):
+                return np.linalg.norm(line[last] - line[first])
+                
+        return np.linalg.norm(line[last-1] - line[first])
 
 def test():
     #test isInCircle
@@ -60,6 +63,7 @@ def test():
         print(C1.isInCircle(point))
     
     #test lengthLineIntersection
-    line = np.array[2,np.arange(0,5)])
+    #expected result : 4.0
+    line = np.array([(2,0.25*i) for i in range (0,27)])
     print(C1.lengthLineIntersection(line))
             
