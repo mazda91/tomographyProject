@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-class frameworkClass:
+class Framework:
 	#attributes
 	#float xmax;
 	#float ymax;
@@ -19,41 +19,41 @@ class frameworkClass:
 
 
 	#setters
-	def set_xmax (self,xmax):
+	def setXmax (self,xmax):
 		self.xmax = xmax;
 
-	def set_ymax (self,ymax):
+	def setYmax (self,ymax):
 		self.ymax = ymax;
 
-	def set_imageList(self,imageList):
-		self.imageList = ImageList ;
+	def setImageList(self,imageList):
+		self.imageList = imageList ;
 
-	def set_imageCurrent(self,im):
+	def setImageCurrent(self,im):
 		self.currentImage = im;
 
 	#getters
-	def get_xmax (self):
+	def getXmax (self):
 		return self.xmax;
 
-	def get_ymax(self):
+	def getYmax(self):
 		return self.ymax;
 
-	def get_ImageList(self):
+	def getImageList(self):
 		return self.imageList;
 
-	def get_imageCurrent(selfself,):
+	def getImageCurrent(self):
 		return self.currentImage;
 
 	#add image im in the image list 
-	def add_Image(self,im):
+	def addImage(self,im):
 		self.imageList.append(im);
 
 	#remove image im in the image list 
-	def remove_Image(self,im):
+	def removeImage(self,im):
 		self.imageList.remove(im);
 
 	#to plot the framework
-	def plot_fram(self):
+	def plotFram(self):
 		x = np.array([self.xmin,self.xmax,self.xmax,self.xmin, self.xmin])
 		y = np.array([self.ymin,self.ymin, self.ymax, self.ymax,self.ymin])
 		plt.plot(x,y)
@@ -62,7 +62,7 @@ class frameworkClass:
 		plt.show()
 
 	#nb of imageList existing
-	def nb_of_image(self):
+	def nbOfImages(self):
 		return len(self.imageList)
 
 

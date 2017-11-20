@@ -8,8 +8,10 @@ Created on Fri Nov 17 10:39:39 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import framework as fmw
+import image as img
 
-class circle:
+class Circle:
     "class"
     def __init__(self,center = 0, radius = 0, intensity = 0):
         self.center = center
@@ -52,8 +54,6 @@ class circle:
  
         return np.linalg.norm(line[last-1] - line[first])
 
-class framework:
-    "domain"
 
 def line(framework, phi,s,dl): #returns a np.array of points corresponding to the projection line at angle phi and length s, given a dl step in the sigmaPhi direction
                  #TODO : finding the first and last point belonging to the framework
@@ -81,7 +81,7 @@ def test():
     line2 = np.array([(2,0.25*i) for i in range (0,10)])
     print(C1.lengthLineIntersection(line2))
     
-    frame = framework()
+    frame = fmw()
     frame.xmax = 10
     frame.ymax = 10
     

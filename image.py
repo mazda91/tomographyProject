@@ -1,21 +1,21 @@
-class imageClass:
+class Image:
 	#attributes
 	#list circleList;
 
 	def __init__(self,circleList):
 		self.circleList = circleList;
 
-	def get_circleList(self):
+	def getCircleList(self):
 		return self.circleList;
 
 
-	def add_circle(self,circle):
+	def addCircle(self,circle):
 		self.circleList.append(circle);
 
-	def remove_circle(self,circle):
+	def removeCircle(self,circle):
 		self.circleList.remove(circle);
 
-	def nb_of_circle():
+	def nbOfCircles(self):
 		return len(self.circleList)
 
 
