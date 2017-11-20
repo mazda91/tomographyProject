@@ -1,0 +1,36 @@
+1. write code to calculate the line length of intersection of an
+arbitrary line in 2D/3D with an arbitrary circle/sphere.
+2. design two or three different phantoms made up of sums of
+circles/spheres with different "intensities"
+3. use one of the 2D phantoms and the code from "1." to create a sinogram
+4. verify the Helgason-Ludwig conditions for orders 0,1,2,3; show plots
+of the moments, and calculate the residues from the nearest polynomials
+matching the data
+5. create a sinogram where two or three of the circles (of high
+intensity) move during the parallel projection collection
+6. check the residues for the Helgason-Ludwig polynomials
+7. repeat 3. to 6. for one set of DCC either from list A, or from list
+B.  No overlap with the other student.
+8. A short report with some images and plots for (a) Helgason Ludwig
+results (b) list A or B results
+
+List A.
+i. fan-beam sources on a line (Clackdoyle 2013)
+ii. fully 3D X-ray projections (parallel)  (use Clackdoyle+Desbat 2013
+and/or Natterer)
+iii. truncated parallel projections (Clackdoyle+Desbat 2015) [don't do
+fan-beam, just parallel]
+iv. parallel projections using Helgason Ludwig conditions on whole
+sinogram [ <p,q_k,n>=0 q_k,n = s^n e^ik(phi) ]
+v. Helgason Ludwig conditions with 3D Radon transform (Natterer)
+List B.
+i. cone-beam sources on a plane (Clackdoyle + Desbat 2013)
+ii. cone-beam projections, circular source trajectory; use Grangeat's
+result to verify consistency between two projections (not sure best
+reference for this... Grangeat 1987?) [there is no order n=0,1,2,3; just
+derivative of Radon transform matching; also use 3D Radon transform to
+check independently]
+iii. exponential parallel projections in 3D (again, no "order" exists)
+(Aguilar, Ehrenpreis, Kuchment 1996; Mennessier et al 1999)
+iv. cone-beam DCC on a circle (Clackdoyle et al 2016) [just n=0,1]
+v. other, suggested by student but with permission of instructor.
