@@ -40,19 +40,29 @@ class Circle:
         return (np.linalg.norm(point - self.center) <= self.radius)
         
     def lengthLineIntersection(self,line):
+        #2 cases : the line intersects
+        #                 it doesn't
         first = 0; last = 0;
-        while ((self.isInCircle(line[first]) == False) & (last < len(line)-1)):
-            first = first + 1
+        if len(line) == 1:
+            return 0 
+        
+        while ((self.isInCircle(line[first]) == False) & (first < len(line)-1)):
+                first = first + 1
             
         last = first
         while ((last < len(line)-1) & self.isInCircle(line[last]) ): #if the last element of the line is in the circle, it is not taken into account
             last = last + 1
         
-        if (last == (len(line)-1)): #special if to take into account the last element if necessary
-            if self.isInCircle(line[last]):
-                return np.linalg.norm(line[last] - line[first])
- 
-        return np.linalg.norm(line[last-1] - line[first])
+        if last != first:
+            if (last == (len(line)-1)): #special if to take into account the last element if necessary
+                if self.isInCircle(line[last]):
+                    return np.linalg.norm(line[last] - line[first])
+                else:
+                    return np.linalg.norm(line[last-1] - line[first])
+            else:
+                    return np.linalg.norm(line[last] - line[first])
+        return 0
+        
 
 
 def line(framework, phi,s,dl): #returns a np.array of points corresponding to the projection line at angle phi and length s, given a dl step in the sigmaPhi direction
@@ -67,20 +77,23 @@ def line(framework, phi,s,dl): #returns a np.array of points corresponding to th
             
         return np.array([(s*thetaPhi + i*dl*sigmaPhi) for i in range (lstart+1,lend)]) 
         
-def buildSinogram(framework,n,m,dl): # (n,m) = (nb of subdivisions of phi, nb of subdivisions of s)
-    radonTransform = np.zeros((n,m))
+def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
+    radonTransform = np.zeros((a,m))
     #deriving the range of values of phi and s
-    dphi = np.pi/n        
+    dphi = np.pi/a        
     #the length abs(sMax) s.t the line remains in the framework depends on phi
-    for k in range(0,n): #stops to n-1 : no projection for angle pi
+    for k in range(0,a): #stops to a-1 : no projection for angle pi
         phi = k*dphi
-        sMax = framework.ymax*np.sin(phi)
+        if 0.0 <= phi <= np.arctan(framework.ymax/framework.xmax):
+            sMax = framework.xmax/np.cos(phi)
+        else:
+            sMax = framework.ymax/np.sin(phi)
         ds = 2*sMax/m
         
         for j in range(0,m):
             #for a given angle k*phi, a given length j*ds : compute the radon transform
             for circle in framework.getCurrentImage().getListOfCircles():
-                line1 = line(framework,k*dphi,-2*sMax + j*ds,dl)
+                line1 = line(framework,k*dphi,-sMax + j*ds,dl)
                 radonTransform[k,j] = radonTransform[k,j] + circle.lengthLineIntersection(line1)*circle.intensity
         
     #display the sinogram
@@ -96,35 +109,6 @@ def buildSinogram(framework,n,m,dl): # (n,m) = (nb of subdivisions of phi, nb of
     plt.ylabel('\phi',fontsize=10)
     plt.title('Sinogram',fontsize=12, color='r')
     #return the sinogram ?
-def test():
-    #test isInCircle
-    #expected result : True, False, False, False, False
-    center1 = np.array([2,2]); radius1 = 2; intensity1 = 0;
-    C1 = Circle(center1, radius1, intensity1)
-    point1 = np.array([2,4]); point2 = np.array([2,4.1]); point3 = np.array([2,-0.1]); point4 = np.array([-0.1,2]); point5 = np.array([4,1.5])
-    list_points = [point1,point2,point3,point4,point5]
-    for point in list_points:
-        print(C1.isInCircle(point))
-    
-    #test lengthLineIntersection
-    #expected result : 4.0
-    line2 = np.array([(2,0.25*i) for i in range (0,10)])
-    print(C1.lengthLineIntersection(line2))
-
-    frame = Framework(10,10)
-    line1 = line(frame, np.pi/2 , 3 ,0.01)
-    print(C1.lengthLineIntersection(line1))
-    
-    #test Sinogram
-    center2 = np.array([0,0]); radius2 = 1; intensity2 = 2;
-    C2 = Circle(center2, radius2, intensity2)
-
-    img1 = Image()
-    img1.addCircle(C2)     
-    
-    frame.addImage(img1)
-    frame.setCurrentImage(img1)
-    
-    buildSinogram(frame,100,100,0.1)
+   
     
             

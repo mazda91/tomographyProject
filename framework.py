@@ -9,9 +9,7 @@ class Framework:
 	#image currentImage;
 
 	#initialization
-	def __init__(self,xmin, ymin, xmax,ymax,imageList,currentImage):
-		self.xmin = xmin;
-		self.ymin = ymin;
+	def __init__(self,xmax,ymax,imageList = [],currentImage = 0): #if no image, the constructor gives 0
 		self.xmax = xmax;
 		self.ymax = ymax;
 		self.imageList = imageList;
@@ -28,7 +26,7 @@ class Framework:
 	def setImageList(self,imageList):
 		self.imageList = imageList ;
 
-	def setImageCurrent(self,im):
+	def setCurrentImage(self,im):
 		self.currentImage = im;
 
 	#getters
@@ -41,7 +39,7 @@ class Framework:
 	def getImageList(self):
 		return self.imageList;
 
-	def getImageCurrent(self):
+	def getCurrentImage(self):
 		return self.currentImage;
 
 	#add image im in the image list 

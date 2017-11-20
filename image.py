@@ -2,20 +2,20 @@ class Image:
 	#attributes
 	#list circleList;
 
-	def __init__(self,circleList):
-		self.circleList = circleList;
+	def __init__(self,listOfCircles = []):
+		self.listOfCircles = listOfCircles;
 
-	def getCircleList(self):
-		return self.circleList;
+	def getListOfCircles(self):
+		return self.listOfCircles;
 
 
 	def addCircle(self,circle):
-		self.circleList.append(circle);
+		self.listOfCircles.append(circle);
 
 	def removeCircle(self,circle):
-		self.circleList.remove(circle);
+		self.listOfCircles.remove(circle);
 
 	def nbOfCircles(self):
-		return len(self.circleList)
+		return len(self.listOfCircles)
 
 
