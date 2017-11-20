@@ -1,26 +1,4 @@
 Question 1)
-    _define following classes : *framework : 
-                                    attributes :  xmax, ymax, list(images)
+ in Framework class : being able to choose the image from the imageList ! not from a function, otherwise the list has no interest                                                    
 
-                                    methods : setters and getters, addImage(image), chooseImage()
-
-                                *image : 
-                                    attributes : list(circles)
-                                    
-                                    methods : addCircle(circle), removeCircle(circle)
-
-                                *circle
-                                    attributes : center / radius / intensity (constant for now)
-
-                                    methods : 
-                                                setters and getters
-                                                isInCircle(point)
-                                                    return bool
-                                                
-                                              lengthLineIntersection(list)
-                                                    return float
-
-  _define following functions :
-                                line(phi,s) return list
-                                                    
 

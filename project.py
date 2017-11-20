@@ -8,8 +8,8 @@ Created on Fri Nov 17 10:39:39 2017
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import framework as fmw
-import image as img
+from framework import *
+from image import *
 
 class Circle:
     "class"
@@ -41,7 +41,7 @@ class Circle:
         
     def lengthLineIntersection(self,line):
         first = 0; last = 0;
-        while (self.isInCircle(line[first]) == False):
+        while ((self.isInCircle(line[first]) == False) & (last < len(line)-1)):
             first = first + 1
             
         last = first
@@ -66,11 +66,41 @@ def line(framework, phi,s,dl): #returns a np.array of points corresponding to th
             lend = lend+1
             
         return np.array([(s*thetaPhi + i*dl*sigmaPhi) for i in range (lstart+1,lend)]) 
+        
+def buildSinogram(framework,n,m,dl): # (n,m) = (nb of subdivisions of phi, nb of subdivisions of s)
+    radonTransform = np.zeros((n,m))
+    #deriving the range of values of phi and s
+    dphi = np.pi/n        
+    #the length abs(sMax) s.t the line remains in the framework depends on phi
+    for k in range(0,n): #stops to n-1 : no projection for angle pi
+        phi = k*dphi
+        sMax = framework.ymax*np.sin(phi)
+        ds = 2*sMax/m
+        
+        for j in range(0,m):
+            #for a given angle k*phi, a given length j*ds : compute the radon transform
+            for circle in framework.getCurrentImage().getListOfCircles():
+                line1 = line(framework,k*dphi,-2*sMax + j*ds,dl)
+                radonTransform[k,j] = radonTransform[k,j] + circle.lengthLineIntersection(line1)*circle.intensity
+        
+    #display the sinogram
+    plt.imshow(radonTransform, interpolation='bilinear', 
+              cmap=cm.gist_gray, 
+              origin='lower', 
+              extent=[-framework.xmax,framework.xmax,-framework.ymax,framework.ymax])
+
+    plt.xticks(size = 8)
+    plt.yticks(size = 8)
+    
+    plt.xlabel('s',fontsize=10)
+    plt.ylabel('\phi',fontsize=10)
+    plt.title('Sinogram',fontsize=12, color='r')
+    #return the sinogram ?
 def test():
     #test isInCircle
     #expected result : True, False, False, False, False
     center1 = np.array([2,2]); radius1 = 2; intensity1 = 0;
-    C1 = circle(center1, radius1, intensity1)
+    C1 = Circle(center1, radius1, intensity1)
     point1 = np.array([2,4]); point2 = np.array([2,4.1]); point3 = np.array([2,-0.1]); point4 = np.array([-0.1,2]); point5 = np.array([4,1.5])
     list_points = [point1,point2,point3,point4,point5]
     for point in list_points:
@@ -80,11 +110,21 @@ def test():
     #expected result : 4.0
     line2 = np.array([(2,0.25*i) for i in range (0,10)])
     print(C1.lengthLineIntersection(line2))
-    
-    frame = fmw()
-    frame.xmax = 10
-    frame.ymax = 10
-    
+
+    frame = Framework(10,10)
     line1 = line(frame, np.pi/2 , 3 ,0.01)
     print(C1.lengthLineIntersection(line1))
+    
+    #test Sinogram
+    center2 = np.array([0,0]); radius2 = 1; intensity2 = 2;
+    C2 = Circle(center2, radius2, intensity2)
+
+    img1 = Image()
+    img1.addCircle(C2)     
+    
+    frame.addImage(img1)
+    frame.setCurrentImage(img1)
+    
+    buildSinogram(frame,100,100,0.1)
+    
             
