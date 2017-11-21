@@ -60,7 +60,7 @@ class Circle:
                 else:
                     return np.linalg.norm(line[last-1] - line[first])
             else:
-                    return np.linalg.norm(line[last] - line[first])
+                    return np.linalg.norm(line[last-1] - line[first])
         return 0
         
 
@@ -84,13 +84,15 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     #the length abs(sMax) s.t the line remains in the framework depends on phi
     for k in range(0,a): #stops to a-1 : no projection for angle pi
         phi = k*dphi
-        if 0.0 <= phi <= np.arctan(framework.ymax/framework.xmax):
+        if (0.0 <= phi <= np.arctan(framework.ymax/framework.xmax)):
             sMax = framework.xmax/np.cos(phi)
+        elif (np.pi-np.arctan(framework.ymax/framework.xmax) <= phi <= np.pi):
+            sMax = abs(framework.xmax/np.cos(phi))
         else:
-            sMax = framework.ymax/np.sin(phi)
+            sMax = abs(framework.ymax/np.sin(phi))
         ds = 2*sMax/m
         
-        for j in range(0,m):
+        for j in range(1,m): 
             #for a given angle k*phi, a given length j*ds : compute the radon transform
             for circle in framework.getCurrentImage().getListOfCircles():
                 line1 = line(framework,k*dphi,-sMax + j*ds,dl)
@@ -100,7 +102,7 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     plt.imshow(radonTransform, interpolation='bilinear', 
               cmap=cm.gist_gray, 
               origin='lower', 
-              extent=[-framework.xmax,framework.xmax,-framework.ymax,framework.ymax])
+              extent=[-framework.xmax,framework.xmax,0,180],aspect='auto')
 
     plt.xticks(size = 8)
     plt.yticks(size = 8)
@@ -109,6 +111,6 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     plt.ylabel('\phi',fontsize=10)
     plt.title('Sinogram',fontsize=12, color='r')
     #return the sinogram ?
-   
+    return radonTransform
     
             

@@ -52,22 +52,21 @@ line2 = np.array([(2,0.25*i) for i in range (0,10)])
 print(C1.lengthLineIntersection(line2))
 
 frame = Framework(10,10)
-line1 = line(frame, np.pi/2 , 3 ,0.01)
+line1 = line(frame, np.pi/2 , 2 ,0.1)
 print(C1.lengthLineIntersection(line1))
 
 #test Sinogram
 center2 = np.array([0,0]); radius2 = 1; intensity2 = 2;
 C2 = Circle(center2, radius2, intensity2)
 line2 = line(frame,0,-10,0.1)
-line3 = np.array([(-10,0.1*i) for i in range(-101,101)])
-print(C2.lengthLineIntersection(line3))
+print(C2.lengthLineIntersection(line2))
 img1 = Image()
 img1.addCircle(C2)     
 
 frame.addImage(img1)
 frame.setCurrentImage(img1)
 
-buildSinogram(frame,10,10,0.1)
+radonTransform = buildSinogram(frame,100,100,0.1)
 
 
 
