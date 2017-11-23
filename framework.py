@@ -9,32 +9,38 @@ class Framework:
 	#image currentImage;
 
 	#initialization
-	def __init__(self,xmax,ymax,imageList = [],currentImage = 0): #if no image, the constructor gives 0
-		self.xmax = xmax;
-		self.ymax = ymax;
+	def __init__(self,xcenter,ycenter ,radius, imageList = [],currentImage = 0): #if no image, the constructor gives 0
+		self.xcenter = xcenter;
+		self.ycenter = ycenter;
 		self.imageList = imageList;
 		self.currentImage= currentImage;
-
+		self.radius = radius;
 
 	#setters
-	def setXmax (self,xmax):
-		self.xmax = xmax;
+	def setXcenter (self,xcenter):
+		self.xcenter = xcenter;
 
-	def setYmax (self,ymax):
-		self.ymax = ymax;
+	def setYcenter (self,ymax):
+		self.ycenter = ycenter;
+
+	def setRadius(self, radius):
+		self.radius = radius;
 
 	def setImageList(self,imageList):
 		self.imageList = imageList ;
 
-	def setCurrentImage(self,im):
-		self.currentImage = im;
+	def setCurrentImage(self,order):
+		self.currentImage = self.imageList(order);
 
 	#getters
-	def getXmax (self):
-		return self.xmax;
+	def getXcenter (self):
+		return self.xcenter;
 
-	def getYmax(self):
-		return self.ymax;
+	def getYcenter(self):
+		return self.ycenter;
+
+	def getRadius(self):
+		return self.radius;
 
 	def getImageList(self):
 		return self.imageList;
