@@ -9,7 +9,7 @@ class Framework:
 	#image currentImage;
 
 	#initialization
-	def __init__(self,xcenter,ycenter ,radius, imageList = [],currentImage = 0): #if no image, the constructor gives 0
+	def __init__(self,xcenter = 0,ycenter = 0 ,radius = 1, imageList = [],currentImage = 0): #if no image, the constructor gives 0
 		self.xcenter = xcenter;
 		self.ycenter = ycenter;
 		self.imageList = imageList;
@@ -20,7 +20,7 @@ class Framework:
 	def setXcenter (self,xcenter):
 		self.xcenter = xcenter;
 
-	def setYcenter (self,ymax):
+	def setYcenter (self,ycenter):
 		self.ycenter = ycenter;
 
 	def setRadius(self, radius):
@@ -30,7 +30,11 @@ class Framework:
 		self.imageList = imageList ;
 
 	def setCurrentImage(self,order):
-		self.currentImage = self.imageList(order);
+         #if order >= len(self.imageList):
+          #  ;
+         #else:
+         self.currentImage = self.imageList[order];
+               
 
 	#getters
 	def getXcenter (self):

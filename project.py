@@ -43,7 +43,7 @@ class Circle:
         #2 cases : the line intersects
         #                 it doesn't
         first = 0; last = 0;
-        if len(line) == 1:
+        if (len(line) == 1) | (len(line) == 0):
             return 0 
         
         while ((self.isInCircle(line[first]) == False) & (first < len(line)-1)):
@@ -65,14 +65,14 @@ class Circle:
         
 
 
-def line(framework, phi,s,dl): #returns a np.array of points corresponding to the projection line at angle phi and length s, given a dl step in the sigmaPhi direction
-                 #TODO : finding the first and last point belonging to the framework
+def line(fmw, phi,s,dl): #returns a np.array of points corresponding to the projection line at angle phi and length s, given a dl step in the sigmaPhi direction
+                 #TODO : finding the first and last point belonging to the framework fmw
         thetaPhi = np.array([np.cos(phi),np.sin(phi)])
         sigmaPhi = np.array([-np.sin(phi),np.cos(phi)])
         lstart = 0; lend = 0;
-        while (abs(s*thetaPhi[0] + lstart*dl*sigmaPhi[0]) <= framework.xmax) &  (abs(s*thetaPhi[1] + lstart*dl*sigmaPhi[1]) <= framework.ymax): #finding one extermity
+        while (np.linalg.norm(s*thetaPhi + lstart*dl*sigmaPhi - np.array([fmw.xcenter,fmw.ycenter]))<= fmw.radius): #finding one extermity
             lstart = lstart-1
-        while (abs(s*thetaPhi[0] + lend*dl*sigmaPhi[0]) <= framework.xmax) &  (abs(s*thetaPhi[1] + lend*dl*sigmaPhi[1]) <= framework.ymax): #finding one extermity
+        while (np.linalg.norm(s*thetaPhi + lend*dl*sigmaPhi - np.array([fmw.xcenter,fmw.ycenter])) <= fmw.radius): #finding one extermity
             lend = lend+1
             
         return np.array([(s*thetaPhi + i*dl*sigmaPhi) for i in range (lstart+1,lend)]) 
@@ -81,28 +81,21 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     radonTransform = np.zeros((a,m))
     #deriving the range of values of phi and s
     dphi = np.pi/a        
-    #the length abs(sMax) s.t the line remains in the framework depends on phi
     for k in range(0,a): #stops to a-1 : no projection for angle pi
         phi = k*dphi
-        if (0.0 <= phi <= np.arctan(framework.ymax/framework.xmax)):
-            sMax = framework.xmax/np.cos(phi)
-        elif (np.pi-np.arctan(framework.ymax/framework.xmax) <= phi <= np.pi):
-            sMax = abs(framework.xmax/np.cos(phi))
-        else:
-            sMax = abs(framework.ymax/np.sin(phi))
-        ds = 2*sMax/m
+        ds = 2*framework.radius/m
         
         for j in range(1,m): 
             #for a given angle k*phi, a given length j*ds : compute the radon transform
             for circle in framework.getCurrentImage().getListOfCircles():
-                line1 = line(framework,k*dphi,-sMax + j*ds,dl)
+                line1 = line(framework, phi,-framework.radius + j*ds,dl)
                 radonTransform[k,j] = radonTransform[k,j] + circle.lengthLineIntersection(line1)*circle.intensity
         
     #display the sinogram
     plt.imshow(radonTransform, interpolation='bilinear', 
               cmap=cm.gist_gray, 
               origin='lower', 
-              extent=[-framework.xmax,framework.xmax,0,180],aspect='auto')
+              extent=[-framework.radius,framework.radius,0,180],aspect='auto')
 
     plt.xticks(size = 8)
     plt.yticks(size = 8)
