@@ -51,20 +51,22 @@ for point in list_points:
 line2 = np.array([(2,0.25*i) for i in range (0,10)])
 print(C1.lengthLineIntersection(line2))
 
-frame = Framework(10,10)
+frame = Framework(0,0,5)
 line1 = line(frame, np.pi/2 , 2 ,0.1)
 print(C1.lengthLineIntersection(line1))
 
 #test Sinogram
-center2 = np.array([0,0]); radius2 = 1; intensity2 = 2;
+center2 = np.array([0,0]); radius2 = 2; intensity2 = 2;
 C2 = Circle(center2, radius2, intensity2)
 line2 = line(frame,0,-10,0.1)
 print(C2.lengthLineIntersection(line2))
 img1 = Image()
 img1.addCircle(C2)     
-
+center2 = np.array([1,1]); radius2 = 1; intensity2 = 4;
+C2 = Circle(center2, radius2, intensity2)
+img1.addCircle(C2)
 frame.addImage(img1)
-frame.setCurrentImage(img1)
+frame.setCurrentImage(0)
 
 radonTransform = buildSinogram(frame,100,100,0.1)
 

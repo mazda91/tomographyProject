@@ -5,10 +5,6 @@ Question 1)
 optimize lengthLineIntersection ?
 
 
-
-problem with the sinogram : the sinogram of a single circle must be independent on the angle of projection phi.
-                            But it's not the case, because, as the length sMax of the line with direction thetaPhi depends on phi
-                            sMax varies. Then, discretizing [-sMax,sMax] and [-sMax -1, -sMax + 1] (exemple) doesn't lead to the same
-                            projection line distances to the origin, then not the same projections. 
+in setCurrentImage : case if input order is greater than the length of the list 
 
 http://web.engr.oregonstate.edu/~sinisa/courses/OSU/ECE468/lectures/ECE468_15.pdf
