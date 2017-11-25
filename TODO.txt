@@ -2,8 +2,7 @@ Question 1)
  in Framework class : being able to choose the image from the imageList ! not from a function, otherwise the list has no interest                                                    
  in Framework class : display the current image
 
-
-
+optimize lengthLineIntersection ?
 
 
 
