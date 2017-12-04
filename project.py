@@ -50,6 +50,17 @@ class Circle:
                 first = first + 1
             
         last = first
+        for i in range(last,len(line)):
+            if self.isInCircle(line[last]) == True:
+                last = last + 1
+        return np.linalg.norm(line[last-1] - line[first])
+        
+                
+                
+                
+                
+                
+                
         while ((last < len(line)-1) & self.isInCircle(line[last]) ): #if the last element of the line is in the circle, it is not taken into account
             last = last + 1
         
@@ -62,6 +73,7 @@ class Circle:
             else:
                     return np.linalg.norm(line[last-1] - line[first])
         return 0
+        
         
 
 
