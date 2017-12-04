@@ -56,19 +56,25 @@ line1 = line(frame, np.pi/2 , 2 ,0.1)
 print(C1.lengthLineIntersection(line1))
 
 #test Sinogram
-center2 = np.array([0,0]); radius2 = 2; intensity2 = 2;
+center2 = np.array([0,0]); radius2 = 4; intensity2 = 4;
 C2 = Circle(center2, radius2, intensity2)
 line2 = line(frame,0,-10,0.1)
 print(C2.lengthLineIntersection(line2))
 img1 = Image()
 img1.addCircle(C2)     
-center2 = np.array([1,1]); radius2 = 1; intensity2 = 4;
-C2 = Circle(center2, radius2, intensity2)
+#center2 = np.array([1,1]); radius2 = 1; intensity2 = 4;
+#C2 = Circle(center2, radius2, intensity2)
 #img1.addCircle(C2)
 frame.addImage(img1)
 frame.setCurrentImage(0)
 
+radonTransform = np.zeros((100,100))
 radonTransform = buildSinogram(frame,100,100,0.1)
+#test constantness of radonTransform for a circle
+test = np.copy(radonTransform)
+for k in range(1,np.shape(test)[0]):
+    test[k] = test[k] - test[0]
+test[0] = np.zeros(np.shape(test[0]))
 
 #test integrale function
 x = np.linspace(0,np.pi,1000)
@@ -78,9 +84,29 @@ res = integrale(x,y)
 print(res)
 
 #test moment function
+order = 0
 plt.figure()
-vecMoment = moment(frame,radonTransform,0)
+vecMoment = moment(frame,radonTransform,order)
 absPhi = np.linspace(0,np.pi,len(vecMoment))
 plt.plot(absPhi,vecMoment)
 
+#testDotProduct
+phi = np.linspace(0,2*np.pi,100)
+vecP = np.sin(5*phi)
+vecQ = np.sin(5*phi)
+res = trigoDotProduct(phi,np.ones(100),np.ones(100))
+print(res)
+#we derive consistent and precise values for norms of basis trigonometric 
+#polynomial functions
+
+#test projectionMoment
+vecProj = projectionMoment(phi,order,vecMoment)
+print(np.linalg.norm(vecMoment-vecProj))
+
+ds = 2*frame.radius/100
+line1 = line(frame,1*(2*np.pi/100),-frame.radius + 62*ds,0.1)
+line2 = line(frame,2*(2*np.pi/100),-frame.radius + 62*ds,0.1)
+
+x = C2.lengthLineIntersection(line1)
+y = C2.lengthLineIntersection(line2)
 
