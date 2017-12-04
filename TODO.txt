@@ -7,6 +7,8 @@ optimize lengthLineIntersection ?
 at the end of sinogram function : retrieve radonTransform(done) + phi interval + s interval 
 why ? : providing them for the integrale function in moment function
 
+overload dotProduct operator
+
 in setCurrentImage : case if input order is greater than the length of the list 
 
 http://web.engr.oregonstate.edu/~sinisa/courses/OSU/ECE468/lectures/ECE468_15.pdf

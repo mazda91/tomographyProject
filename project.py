@@ -50,29 +50,11 @@ class Circle:
                 first = first + 1
             
         last = first
-        for i in range(last,len(line)):
-            if self.isInCircle(line[last]) == True:
-                last = last + 1
-        return np.linalg.norm(line[last-1] - line[first])
+        for i in range(first,len(line)):
+            if self.isInCircle(line[i]) == True:
+                last = i
+        return np.linalg.norm(line[last] - line[first])
         
-                
-                
-                
-                
-                
-                
-        while ((last < len(line)-1) & self.isInCircle(line[last]) ): #if the last element of the line is in the circle, it is not taken into account
-            last = last + 1
-        
-        if last != first:
-            if (last == (len(line)-1)): #special if to take into account the last element if necessary
-                if self.isInCircle(line[last]):
-                    return np.linalg.norm(line[last] - line[first])
-                else:
-                    return np.linalg.norm(line[last-1] - line[first])
-            else:
-                    return np.linalg.norm(line[last-1] - line[first])
-        return 0
         
         
 
@@ -92,9 +74,9 @@ def line(fmw, phi,s,dl): #returns a np.array of points corresponding to the proj
 def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
     radonTransform = np.zeros((a,m)) 
     #deriving the range of values of phi and s
-    dphi = np.pi/a        
+    dphi = 2*np.pi/a        
     for k in range(0,a): #stops to a-1 : no projection for angle pi
-        import pdb; pdb.set_trace()
+#        import pdb; pdb.set_trace()
         phi = k*dphi
         ds = 2*framework.radius/m
         
@@ -108,7 +90,7 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     plt.imshow(radonTransform, interpolation='bilinear', 
               cmap=cm.gist_gray, 
               origin='lower', 
-              extent=[-framework.radius,framework.radius,0,180],aspect='auto')
+              extent=[-framework.radius,framework.radius,0,360],aspect='auto')
 
     plt.xticks(size = 8)
     plt.yticks(size = 8)
@@ -129,7 +111,6 @@ def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY functi
 def moment(framework,radonTransform,n): #moment of order n
     dimRadon = np.shape(radonTransform)
     a = dimRadon[0] #nb of subdivisions of phi interval : [0,pi]
-    dphi = np.pi/a
     vecMoment = np.zeros(a)
     m = dimRadon[1] #nb of subdivisions of interval s
     ds = 2*framework.radius/m
@@ -139,9 +120,20 @@ def moment(framework,radonTransform,n): #moment of order n
         vecMoment[k] = integrale(s,radonTransform[k,:]*(s**n))
     return vecMoment
         
-  
+def trigoDotProduct(phi,vecP,vecQ):
+    return integrale(phi,vecP*vecQ)
                 
-        
+def projOnBasis(vecMoment,vecBasis): #projection of the moment on a vector basis of trigonometric polynomials
+    dim = len(vecMoment)
+    phi = np.linspace(0,2*np.pi,dim)
+    projTerm = vecBasis*trigoDotProduct(phi,vecBasis,vecMoment)/trigoDotProduct(phi,vecBasis,vecBasis)
+    return projTerm
     
-    
+def projectionMoment(n,vecMoment): #n : order of the moment to be projected
+    dim = len(vecMoment)
+    projRes = np.zeros(dim)
+    constTerm = projOnBasis(vecMoment,np.ones(dim))
+    projRes = projRes + constTerm
+    for i in range(1,dim+1):
+        vecCos = np.cos
             
