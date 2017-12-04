@@ -82,6 +82,7 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     #deriving the range of values of phi and s
     dphi = np.pi/a        
     for k in range(0,a): #stops to a-1 : no projection for angle pi
+        import pdb; pdb.set_trace()
         phi = k*dphi
         ds = 2*framework.radius/m
         
