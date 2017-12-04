@@ -6,6 +6,7 @@ Created on Fri Nov 17 10:39:39 2017
 """
 
 import numpy as np
+import math
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 from framework import *
@@ -37,7 +38,7 @@ class Circle:
         self.intensity = intensity
         
     def isInCircle(self,point):
-        return (np.linalg.norm(point - self.center) <= self.radius)
+        return (np.linalg.norm(point - self.center) <= self.radius + 10**(-10))
         
     def lengthLineIntersection(self,line):
         #2 cases : the line intersects
@@ -123,17 +124,21 @@ def moment(framework,radonTransform,n): #moment of order n
 def trigoDotProduct(phi,vecP,vecQ):
     return integrale(phi,vecP*vecQ)
                 
-def projOnBasis(vecMoment,vecBasis): #projection of the moment on a vector basis of trigonometric polynomials
-    dim = len(vecMoment)
-    phi = np.linspace(0,2*np.pi,dim)
-    projTerm = vecBasis*trigoDotProduct(phi,vecBasis,vecMoment)/trigoDotProduct(phi,vecBasis,vecBasis)
-    return projTerm
+def projOnBasis(phi,vecMoment,vecBasis): #projection of the moment on a vector basis of trigonometric polynomials
+    if trigoDotProduct(phi,vecBasis,vecBasis) != 0:
+        return vecBasis*trigoDotProduct(phi,vecBasis,vecMoment)/trigoDotProduct(phi,vecBasis,vecBasis)    
+    else :
+        return 0
     
-def projectionMoment(n,vecMoment): #n : order of the moment to be projected
+def projectionMoment(phi,n,vecMoment): #n : order of the moment to be projected
     dim = len(vecMoment)
     projRes = np.zeros(dim)
-    constTerm = projOnBasis(vecMoment,np.ones(dim))
-    projRes = projRes + constTerm
-    for i in range(1,dim+1):
-        vecCos = np.cos
+    degrees = np.array([n-2*i for i in range(0,math.floor(n/2)+1)])
+    for i in degrees:
+        vecCos = np.cos(i*phi)
+        vecSin = np.sin(i*phi)
+        proj1 = projOnBasis(phi,vecMoment,vecCos)
+        proj2 = projOnBasis(phi,vecMoment,vecSin)
+        projRes = projRes + proj1 + proj2
+    return projRes
             
