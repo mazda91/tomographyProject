@@ -4,6 +4,8 @@ Question 1)
 
 optimize lengthLineIntersection ?
 
+at the end of sinogram function : retrieve radonTransform(done) + phi interval + s interval 
+why ? : providing them for the integrale function in moment function
 
 in setCurrentImage : case if input order is greater than the length of the list 
 

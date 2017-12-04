@@ -64,13 +64,23 @@ img1 = Image()
 img1.addCircle(C2)     
 center2 = np.array([1,1]); radius2 = 1; intensity2 = 4;
 C2 = Circle(center2, radius2, intensity2)
-img1.addCircle(C2)
+#img1.addCircle(C2)
 frame.addImage(img1)
 frame.setCurrentImage(0)
 
 radonTransform = buildSinogram(frame,100,100,0.1)
 
+#test integrale function
+x = np.linspace(0,np.pi,1000)
+y = np.sin(x)
 
+res = integrale(x,y)
+print(res)
 
+#test moment function
+plt.figure()
+vecMoment = moment(frame,radonTransform,0)
+absPhi = np.linspace(0,np.pi,len(vecMoment))
+plt.plot(absPhi,vecMoment)
 
 

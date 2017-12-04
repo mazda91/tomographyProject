@@ -78,7 +78,7 @@ def line(fmw, phi,s,dl): #returns a np.array of points corresponding to the proj
         return np.array([(s*thetaPhi + i*dl*sigmaPhi) for i in range (lstart+1,lend)]) 
         
 def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
-    radonTransform = np.zeros((a,m))
+    radonTransform = np.zeros((a,m)) 
     #deriving the range of values of phi and s
     dphi = np.pi/a        
     for k in range(0,a): #stops to a-1 : no projection for angle pi
@@ -105,5 +105,30 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     plt.title('Sinogram',fontsize=12, color='r')
     #return the sinogram ?
     return radonTransform
+
+def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY function on vecX interval
+        integral = 0
+        for i in range(0,len(vecX)-1):
+            integral = integral + (vecX[i+1]-vecX[i])*(vecY[i+1]+vecY[i])/2
+        return integral
+        
+        
+def moment(framework,radonTransform,n): #moment of order n
+    dimRadon = np.shape(radonTransform)
+    a = dimRadon[0] #nb of subdivisions of phi interval : [0,pi]
+    dphi = np.pi/a
+    vecMoment = np.zeros(a)
+    m = dimRadon[1] #nb of subdivisions of interval s
+    ds = 2*framework.radius/m
+    s = np.array([(-framework.radius + i*ds) for i in range(0,m)])
+    
+    for k in range(0,a):
+        vecMoment[k] = integrale(s,radonTransform[k,:]*(s**n))
+    return vecMoment
+        
+  
+                
+        
+    
     
             
