@@ -56,7 +56,7 @@ line1 = line(frame, np.pi/2 , 2 ,0.1)
 print(C1.lengthLineIntersection(line1))
 
 #test Sinogram
-center2 = np.array([0,0]); radius2 = 4; intensity2 = 4;
+center2 = np.array([0,0]); radius2 = 2; intensity2 = 2;
 C2 = Circle(center2, radius2, intensity2)
 line2 = line(frame,0,-10,0.1)
 print(C2.lengthLineIntersection(line2))
@@ -84,10 +84,10 @@ res = integrale(x,y)
 print(res)
 
 #test moment function
-order = 0
+order = 4
 plt.figure()
 vecMoment = moment(frame,radonTransform,order)
-absPhi = np.linspace(0,np.pi,len(vecMoment))
+absPhi = np.linspace(0,2*np.pi,len(vecMoment))
 plt.plot(absPhi,vecMoment)
 
 #testDotProduct
@@ -103,10 +103,4 @@ print(res)
 vecProj = projectionMoment(phi,order,vecMoment)
 print(np.linalg.norm(vecMoment-vecProj))
 
-ds = 2*frame.radius/100
-line1 = line(frame,1*(2*np.pi/100),-frame.radius + 62*ds,0.1)
-line2 = line(frame,2*(2*np.pi/100),-frame.radius + 62*ds,0.1)
-
-x = C2.lengthLineIntersection(line1)
-y = C2.lengthLineIntersection(line2)
 
