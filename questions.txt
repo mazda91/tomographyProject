@@ -1,0 +1,3 @@
+Sur les projections des moments dans la base des polynômes trigonométriques :
+    est-ce que, sachant analytiquement qu'on peut écrire un moment d'ordre n comme la somme des cos(n-2i) et sin(n-2i), on doit se contenter de projeter
+    le moment sur ces vecteurs de base, ou doit-on projeter quand même sur tous les cos(n-i) et sin(n-i) ?
