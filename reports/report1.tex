@@ -1,0 +1,163 @@
+\documentclass[a4,12pt]{article}
+
+%--- Packages génériques ---%
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[babel=true]{csquotes}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{empheq}
+\usepackage{color}
+\usepackage{cancel}
+
+%--- Structure de la page ---%
+
+\usepackage{fancyheadings}
+
+\topmargin -1.5 cm
+\oddsidemargin -0.5 cm
+\evensidemargin -0.5 cm
+\textwidth 17 cm
+\setlength{\headwidth}{\textwidth}
+\textheight 24 cm
+\pagestyle{fancy}
+\lhead[\fancyplain{}{\thepage}]{\fancyplain{}{\sl MSIAM 3A}}
+\chead[\fancyplain{}{{\sl }}]{\fancyplain{}{{Summary of the last meeting}}}
+\rhead[\fancyplain{}{}]{\fancyplain{}{Rakotonarivo \& Mazouth--Laurol}}
+\lfoot{\fancyplain{}{}}
+\cfoot{\fancyplain{}{}}
+\cfoot{\thepage }
+\rfoot{\fancyplain{}{}}
+
+%--- Raccourcis commande ---%
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\A}{\mathbf{A}}
+\newcommand{\B}{\mathbf{B}}
+\newcommand{\C}{\mathbf{C}}
+\newcommand{\D}{\mathbf{D}}
+\newcommand{\ub}{\mathbf{u}}
+
+\DeclareMathOperator{\e}{e}
+%--- Header to write code ---%
+\usepackage { listings }
+%%configuration de listings
+\lstset{
+	language=c++,
+	basicstyle=\ttfamily\small, %
+	identifierstyle=\color{black}, %
+	keywordstyle=\color{blue}, %
+	stringstyle=\color{black!60}, %
+	commentstyle=\it\color{green!95!yellow!1}, %
+	columns=flexible, %
+	tabsize=2, %
+	extendedchars=true, %
+	showspaces=false, %
+	showstringspaces=false, %
+	numbers=left, %
+	numberstyle=\tiny, %
+	breaklines=true, %
+	breakautoindent=true, %
+	captionpos=b
+}
+
+
+\usepackage{xcolor}
+
+
+\definecolor{Zgris}{rgb}{0.87,0.85,0.85}
+
+
+\newsavebox{\BBbox}
+\newenvironment{DDbox}[1]{
+	\begin{lrbox}{\BBbox}\begin{minipage}{\linewidth}}
+		{\end{minipage}\end{lrbox}\noindent\colorbox{Zgris}{\usebox{\BBbox}} \\
+	[.5cm]}
+%--- Mode correction et incréments automatiques ---%
+
+\usepackage{framed}
+\usepackage{ifthen}
+\usepackage{comment}
+
+\newcounter{Nbquestion}
+
+\newcommand*\question{%
+\stepcounter{Nbquestion}%
+\textbf{Question \theNbquestion. }}
+
+\newboolean{enseignant}
+%\setboolean{enseignant}{true}
+\setboolean{enseignant}{false}
+
+\ifthenelse{
+\boolean{enseignant}}{
+\newenvironment{correction}{\begin{shaded}}{\end{shaded}}
+}
+{
+\excludecomment{correction}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 							               EN-TETE        
+
+\title{\textbf{Tomography reconstruction from 2D projections}}
+\author{
+\begin{tabular}{cc}
+	\textsc{Rakotonarivo Michi} & \textsc{Maxime Mazouth--Laurol}
+\end{tabular}}   
+\date{\small $11^{th}$ December 2017}
+
+\makeatletter
+	\def\thetitle{\@title}
+	\def\theauthor{\@author}
+	\def\thedate{\@date}
+\makeatother 
+
+\usepackage{etoolbox}
+\usepackage{titling}
+\setlength{\droptitle}{-7em}
+
+\setlength{\parindent}{0cm}
+
+\makeatletter
+% patch pour le bug concernant les parenthèses fermantes d'après http://tex.stackexchange.com/q/69472
+\patchcmd{\lsthk@SelectCharTable}{%
+  \lst@ifbreaklines\lst@Def{`)}{\lst@breakProcessOther)}\fi}{}{}{}
+\begin{document}
+
+\maketitle
+\section{Define the frame of work}
+~~ For any computer project, a frame of work must be define. As this project is all about medical imagery made of disks of various intensities, the idea of creating three main classes defining images came naturally. 
+\paragraph{Framework class} 
+This class sets up the area where projections will be taken into account. For convenience, a disk has been preferred, the idea being to be able to translate the center and change the radius(e.g to compute only subsections of an image). Plus, it contains a list of images, so that we can handle them easily, whether it is switching between images, adding or removing.
+\begin{itemize}
+\item \textbf{Attributes}
+	\begin{itemize}
+	\item \textbf{center} = [Xcenter,Ycenter]
+	\item radius
+	\item imageList
+	\item currentImage
+	\end{itemize}
+	
+\item \textbf{Methods}
+	\begin{itemize}
+	\item setters and getters for above attirbutes
+	\item addition and removal of an image
+	\item plot the framework and the current ilage
+	\end{itemize}
+\end{itemize}
+
+\paragraph{Image class}
+In the scope 
+\section{Derive the sinogram of a given image}
+
+\section{Study moments}
+\end{document}
