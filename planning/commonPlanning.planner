@@ -4,9 +4,9 @@
   <phases/>
   <calendars>
     <day-types>
-      <day-type id="0" name="Working" description="A default working day"/>
-      <day-type id="1" name="Nonworking" description="A default non working day"/>
-      <day-type id="2" name="Use base" description="Use day from base calendar"/>
+      <day-type id="0" name="Travaill&#xE9;" description="Un jour de travail normal"/>
+      <day-type id="1" name="Ch&#xF4;m&#xE9;" description="Un jour ch&#xF4;m&#xE9; normal"/>
+      <day-type id="2" name="Utiliser la base" description="Utilise un jour du calendrier de base"/>
     </day-types>
     <calendar id="1" name="D&#xE9;faut">
       <default-week mon="0" tue="0" wed="0" thu="0" fri="0" sat="1" sun="1"/>
@@ -22,73 +22,62 @@
     </calendar>
   </calendars>
   <tasks>
-    <task id="1" name="Define the frame of work" note="&#10;" work="10800" start="20171206T000000Z" end="20171207T170000Z" percent-complete="90" type="normal" scheduling="fixed-work">
-      <task id="2" name="Implement framework class" note="" work="3600" duration="57600" start="20171206T000000Z" end="20171207T170000Z" percent-complete="90" type="normal" scheduling="fixed-duration"/>
-      <task id="3" name="Implement image class" note="" work="3600" duration="57600" start="20171206T000000Z" end="20171207T170000Z" percent-complete="90" type="normal" scheduling="fixed-duration"/>
-      <task id="4" name="Implement disk class" note="" work="3600" duration="57600" start="20171206T000000Z" end="20171207T170000Z" percent-complete="90" type="normal" scheduling="fixed-duration"/>
+    <task id="1" name="Define the frame of work" note="&#10;" work="10800" start="20171206T000000Z" end="20171207T170000Z" work-start="20171206T080000Z" percent-complete="90" priority="0" type="normal" scheduling="fixed-work">
+      <task id="2" name="Implement framework class" note="" work="3600" duration="57600" start="20171206T000000Z" end="20171207T170000Z" work-start="20171206T080000Z" percent-complete="90" priority="0" type="normal" scheduling="fixed-duration"/>
+      <task id="3" name="Implement image class" note="" work="3600" duration="57600" start="20171206T000000Z" end="20171207T170000Z" work-start="20171206T080000Z" percent-complete="90" priority="0" type="normal" scheduling="fixed-duration"/>
+      <task id="4" name="Implement disk class" note="" work="3600" duration="57600" start="20171206T000000Z" end="20171207T170000Z" work-start="20171206T080000Z" percent-complete="90" priority="0" type="normal" scheduling="fixed-duration"/>
     </task>
-    <task id="5" name="Derive sinogram of an image" note="" work="24327" start="20171207T170000Z" end="20171213T081500Z" percent-complete="25" type="normal" scheduling="fixed-work">
+    <task id="5" name="Derive sinogram of an image" note="" work="54900" start="20171207T170000Z" end="20171213T101500Z" work-start="20171208T080000Z" percent-complete="25" priority="0" type="normal" scheduling="fixed-work">
       <predecessors>
         <predecessor id="1" predecessor-id="1" type="FS"/>
       </predecessors>
-      <task id="6" name="sinogram of the unit disk" note="" work="900" duration="900" start="20171207T170000Z" end="20171208T081500Z" percent-complete="25" type="normal" scheduling="fixed-duration"/>
-      <task id="7" name="translation of the Radon transform" note="" work="7200" duration="28800" start="20171208T081500Z" end="20171211T081500Z" percent-complete="0" type="normal" scheduling="fixed-duration">
+      <task id="6" name="sinogram of the unit disk" note="" work="900" duration="900" start="20171207T170000Z" end="20171208T081500Z" work-start="20171208T080000Z" percent-complete="25" priority="0" type="normal" scheduling="fixed-duration"/>
+      <task id="7" name="translation of the Radon transform" note="" work="7200" duration="28800" start="20171208T081500Z" end="20171211T081500Z" work-start="20171208T081500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-duration">
         <predecessors>
           <predecessor id="1" predecessor-id="6" type="FS"/>
         </predecessors>
       </task>
-      <task id="8" name="scaling of the Radon transform" note="" work="7200" duration="28800" start="20171208T081500Z" end="20171211T081500Z" percent-complete="0" type="normal" scheduling="fixed-duration">
+      <task id="8" name="scaling of the Radon transform" note="" work="7200" duration="28800" start="20171208T081500Z" end="20171211T081500Z" work-start="20171208T081500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-duration">
         <predecessors>
           <predecessor id="1" predecessor-id="6" type="FS"/>
         </predecessors>
       </task>
-      <task id="9" name=" Test sinograms for fixed images" note="" work="3627" duration="28800" start="20171211T081500Z" end="20171212T081500Z" percent-complete="0" type="normal" scheduling="fixed-duration">
+      <task id="9" name=" Test sinograms for fixed images" note="" work="3600" duration="28800" start="20171211T081500Z" end="20171212T081500Z" work-start="20171211T081500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-duration">
         <predecessors>
           <predecessor id="1" predecessor-id="8" type="FS"/>
         </predecessors>
       </task>
-      <task id="10" name="Move disks during projection collection" note="" work="1800" duration="28800" start="20171211T081500Z" end="20171212T081500Z" percent-complete="0" type="normal" scheduling="fixed-duration">
+      <task id="10" name="Move disks during projection collection" note="" work="7200" start="20171212T081500Z" end="20171212T101500Z" work-start="20171212T081500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
-          <predecessor id="1" predecessor-id="8" type="FS"/>
+          <predecessor id="1" predecessor-id="9" type="FS"/>
         </predecessors>
       </task>
-      <task id="11" name=" Test sinograms for moving images" note="" work="3600" duration="28800" start="20171212T081500Z" end="20171213T081500Z" percent-complete="0" type="normal" scheduling="fixed-duration">
+      <task id="11" name=" Test sinograms for moving images" note="" work="28800" start="20171212T101500Z" end="20171213T101500Z" work-start="20171212T101500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="10" type="FS"/>
         </predecessors>
       </task>
     </task>
-    <task id="12" name="Study moments for orders 0,1,2,3" note="" work="12600" duration="59400" start="20171213T081500Z" end="20171215T084500Z" percent-complete="75" type="normal" scheduling="fixed-duration">
+    <task id="12" name="Study moments for orders 0,1,2,3" note="" work="86400" duration="28800" start="20171213T101500Z" end="20171214T101500Z" work-start="20171213T101500Z" percent-complete="75" priority="0" type="normal" scheduling="fixed-duration">
       <predecessors>
         <predecessor id="1" predecessor-id="5" type="FS"/>
       </predecessors>
-      <task id="13" name="Derive moments for any order" note="" work="1800" duration="1800" start="20171213T081500Z" end="20171213T084500Z" percent-complete="100" type="normal" scheduling="fixed-duration"/>
-      <task id="14" name="Compute projections on trigonometric polynomial basis" note="" work="3600" duration="28800" start="20171213T084500Z" end="20171214T084500Z" percent-complete="75" type="normal" scheduling="fixed-duration">
-        <predecessors>
-          <predecessor id="1" predecessor-id="13" type="FS"/>
-        </predecessors>
-      </task>
-      <task id="15" name="Test Helgason-Ludwig DCCs" note="" work="7200" duration="28800" start="20171214T084500Z" end="20171215T084500Z" percent-complete="0" type="normal" scheduling="fixed-duration">
-        <predecessors>
-          <predecessor id="1" predecessor-id="14" type="FS"/>
-        </predecessors>
-      </task>
+      <task id="13" name="Derive moments" note="" work="28800" start="20171213T101500Z" end="20171214T101500Z" work-start="20171213T101500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
+      <task id="14" name="Compute projections on trigonometric polynomial basis" note="" work="28800" start="20171213T101500Z" end="20171214T101500Z" work-start="20171213T101500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
+      <task id="15" name="Test Helgason-Ludwig DCCs" note="" work="28800" start="20171213T101500Z" end="20171214T101500Z" work-start="20171213T101500Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work"/>
     </task>
   </tasks>
   <resource-groups/>
   <resources>
-    <resource id="1" name="Rakotonarivo Michi" type="1" units="0" email="" note="" std-rate="0"/>
-    <resource id="2" name="Mazouth--Laurol Maxime" type="1" units="0" email="" note="" std-rate="0"/>
+    <resource id="1" name="Rakotonarivo Michi" short-name="Michi" type="1" units="0" email="" note="" std-rate="0"/>
+    <resource id="2" name="Mazouth--Laurol Maxime" short-name="Maxime" type="1" units="0" email="" note="" std-rate="0"/>
   </resources>
   <allocations>
-    <allocation task-id="15" resource-id="1" units="13"/>
-    <allocation task-id="12" resource-id="1" units="100"/>
-    <allocation task-id="10" resource-id="1" units="6"/>
+    <allocation task-id="10" resource-id="1" units="100"/>
     <allocation task-id="9" resource-id="1" units="13"/>
     <allocation task-id="7" resource-id="1" units="25"/>
     <allocation task-id="2" resource-id="1" units="6"/>
     <allocation task-id="3" resource-id="1" units="6"/>
-    <allocation task-id="15" resource-id="2" units="13"/>
     <allocation task-id="12" resource-id="2" units="100"/>
     <allocation task-id="4" resource-id="2" units="6"/>
     <allocation task-id="6" resource-id="2" units="100"/>

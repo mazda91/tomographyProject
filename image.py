@@ -1,21 +1,21 @@
 class Image:
 	#attributes
-	#list circleList;
+	#list diskList;
 
-	def __init__(self,listOfCircles = []):
-		self.listOfCircles = listOfCircles;
+	def __init__(self,listOfDisks = []):
+		self.listOfDisks = listOfDisks;
 
-	def getListOfCircles(self):
-		return self.listOfCircles;
+	def getListOfDisks(self):
+		return self.listOfDisks;
 
 
-	def addCircle(self,circle):
-		self.listOfCircles.append(circle);
+	def addDisk(self,disk):
+		self.listOfDisks.append(disk);
 
-	def removeCircle(self,circle):
-		self.listOfCircles.remove(circle);
+	def removeDisk(self,disk):
+		self.listOfDisks.remove(disk);
 
-	def nbOfCircles(self):
-		return len(self.listOfCircles)
+	def nbOfDisks(self):
+		return len(self.listOfDisks)
 
 

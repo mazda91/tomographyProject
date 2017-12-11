@@ -2,19 +2,19 @@ import image
 import framework
 from project import *
 
-##here circleList contains 4 circles 
-#circleList1 = [1,2,3,4];
-#circleList2 = [5,6,7,8];
-#circleList3 = [9,10,11,12];
+##here diskList contains 4 disks 
+#diskList1 = [1,2,3,4];
+#diskList2 = [5,6,7,8];
+#diskList3 = [9,10,11,12];
 #
 #
-#im1 = image.imageClass(circleList1);
-#im2 = image.imageClass(circleList2);
-#im3 = image.imageClass(circleList3);
+#im1 = image.imageClass(diskList1);
+#im2 = image.imageClass(diskList2);
+#im3 = image.imageClass(diskList3);
 #
-#attr1 = im1.get_circleList();
-#im1.add_circle(10);
-#im1.remove_circle(2);
+#attr1 = im1.get_diskList();
+#im1.add_disk(10);
+#im1.remove_disk(2);
 #
 #print(attr1);
 #print('\n');
@@ -46,20 +46,20 @@ m = 1000 #nb of subdivisions of s
 
 #test Sinogram
 center2 = np.array([0,0]); radius2 = 1; intensity2 = 2;
-C2 = Circle(center2, radius2, intensity2)
+C2 = Disk(center2, radius2, intensity2)
 
 img1 = Image()
-img1.addCircle(C2)     
+img1.addDisk(C2)     
 center2 = np.array([1,1]); radius2 = 2; intensity2 = 4;
-C2 = Circle(center2, radius2, intensity2)
-#img1.addCircle(C2)
+C2 = Disk(center2, radius2, intensity2)
+#img1.addDisk(C2)
 frame.addImage(img1)
 frame.setCurrentImage(0)
 
 sinoMatrix= np.zeros((a,m))
 sinoMatrix = sinogram(frame,a,m)
-plotSinogram(frame,sinoMatrix)
-#test constantness of radonTransform for a circle
+plotSinogram(frame,sinoMatrix,"images/sinograms/centeredDisk2")
+#test constantness of radonTransform for a disk
 test = np.copy(sinoMatrix)
 for k in range(1,np.shape(test)[0]):
     test[k] = test[k] - test[0]
@@ -73,11 +73,13 @@ res = integrale(x,y)
 print(res)
 
 #test moment function
-order = 5
+order = 0
 plt.figure()
 vecMoment = moment(frame,sinoMatrix,order)
 absPhi = np.linspace(0,2*np.pi,len(vecMoment))
 plt.plot(absPhi,vecMoment)
+#plt.savefig("images/moments/unitDiskMoment0.png")
+
 
 #testDotProduct
 phi = np.linspace(0,2*np.pi,a)
@@ -92,6 +94,7 @@ print(res)
 vecProj = projectionMoment(phi,order,vecMoment)
 plt.figure()
 plt.plot(phi,vecProj)
+#plt.savefig("images/moments/unitDiskProjMoment0.png")
 print(np.linalg.norm(vecMoment-vecProj))
 
 

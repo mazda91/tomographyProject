@@ -12,7 +12,7 @@ import matplotlib.cm as cm
 from framework import *
 from image import *
 
-class Circle:
+class Disk:
     "class"
     def __init__(self,center = 0, radius = 0, intensity = 0):
         self.center = center
@@ -48,7 +48,7 @@ class Circle:
 
 def sinogram(framework,a,m):
     sinoMatrix = np.zeros((a,m)) 
-    for disk in framework.getCurrentImage().getListOfCircles():
+    for disk in framework.getCurrentImage().getListOfDisks():
         sinoMatrix = sinoMatrix + radonTransform(framework,a,m,disk)
     return sinoMatrix
     
@@ -66,7 +66,7 @@ def radonTransform(framework,a,m,disk): # (a,m) = (nb of subdivisions of phi, nb
             
     return radonMatrix
     
-def plotSinogram(framework,sinogram):
+def plotSinogram(framework,sinogram,title):
     #display the sinogram
     plt.imshow(sinogram, interpolation='bilinear', 
               cmap=cm.gist_gray, 
@@ -79,6 +79,7 @@ def plotSinogram(framework,sinogram):
     plt.xlabel('s',fontsize=10)
     plt.ylabel('phi',fontsize=10)
     plt.title('Sinogram',fontsize=12, color='r')
+    plt.savefig(title + ".png")
 
 def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY function on vecX interval
         integral = 0
