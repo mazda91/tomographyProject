@@ -37,58 +37,38 @@ class Circle:
     def setIntensity(self,intensity):
         self.intensity = intensity
         
-    def isInCircle(self,point):
-        return (np.linalg.norm(point - self.center) <= self.radius + 10**(-10))
         
-    def lengthLineIntersection(self,line):
-        #2 cases : the line intersects
-        #                 it doesn't
-        first = 0; last = 0;
-        if (len(line) == 1) | (len(line) == 0):
-            return 0 
+    def lengthLineIntersection(self,s):
+        if abs(s) > self.radius:
+            return 0
+        else:
+            return 2*np.sqrt(self.radius**2 - s**2)
         
-        while ((self.isInCircle(line[first]) == False) & (first < len(line)-1)):
-                first = first + 1
-            
-        last = first
-        for i in range(first,len(line)):
-            if self.isInCircle(line[i]) == True:
-                last = i
-        return np.linalg.norm(line[last] - line[first])
-        
-        
-        
+ 
 
-
-def line(fmw, phi,s,dl): #returns a np.array of points corresponding to the projection line at angle phi and length s, given a dl step in the sigmaPhi direction
-                 #TODO : finding the first and last point belonging to the framework fmw
-        thetaPhi = np.array([np.cos(phi),np.sin(phi)])
-        sigmaPhi = np.array([-np.sin(phi),np.cos(phi)])
-        lstart = 0; lend = 0;
-        while (np.linalg.norm(s*thetaPhi + lstart*dl*sigmaPhi - np.array([fmw.xcenter,fmw.ycenter]))<= fmw.radius): #finding one extermity
-            lstart = lstart-1
-        while (np.linalg.norm(s*thetaPhi + lend*dl*sigmaPhi - np.array([fmw.xcenter,fmw.ycenter])) <= fmw.radius): #finding one extermity
-            lend = lend+1
-            
-        return np.array([(s*thetaPhi + i*dl*sigmaPhi) for i in range (lstart+1,lend)]) 
-        
-def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
-    radonTransform = np.zeros((a,m)) 
+def sinogram(framework,a,m):
+    sinoMatrix = np.zeros((a,m)) 
+    for disk in framework.getCurrentImage().getListOfCircles():
+        sinoMatrix = sinoMatrix + radonTransform(framework,a,m,disk)
+    return sinoMatrix
+    
+def radonTransform(framework,a,m,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
+    radonMatrix = np.zeros((a,m))
+    scale = disk.radius
+    disk.setRadius(1) #using formulae linking radon transform of a scaled disk with the rT on unit disk
     #deriving the range of values of phi and s
-    dphi = 2*np.pi/a        
+    ds = 2*framework.radius/m
     for k in range(0,a): #stops to a-1 : no projection for angle pi
-#        import pdb; pdb.set_trace()
-        phi = k*dphi
-        ds = 2*framework.radius/m
-        
-        for j in range(1,m): 
+        for j in range(0,m): 
             #for a given angle k*phi, a given length j*ds : compute the radon transform
-            for circle in framework.getCurrentImage().getListOfCircles():
-                line1 = line(framework, phi,-framework.radius + j*ds,dl)
-                radonTransform[k,j] = radonTransform[k,j] + circle.lengthLineIntersection(line1)*circle.intensity
-        
+            
+                radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection((-framework.radius + j*ds)/scale)*disk.intensity)
+            
+    return radonMatrix
+    
+def plotSinogram(framework,sinogram):
     #display the sinogram
-    plt.imshow(radonTransform, interpolation='bilinear', 
+    plt.imshow(sinogram, interpolation='bilinear', 
               cmap=cm.gist_gray, 
               origin='lower', 
               extent=[-framework.radius,framework.radius,0,360],aspect='auto')
@@ -97,10 +77,8 @@ def buildSinogram(framework,a,m,dl): # (a,m) = (nb of subdivisions of phi, nb of
     plt.yticks(size = 8)
     
     plt.xlabel('s',fontsize=10)
-    plt.ylabel('\phi',fontsize=10)
+    plt.ylabel('phi',fontsize=10)
     plt.title('Sinogram',fontsize=12, color='r')
-    #return the sinogram ?
-    return radonTransform
 
 def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY function on vecX interval
         integral = 0
