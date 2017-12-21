@@ -59,14 +59,16 @@ def radonTransform(framework,a,m,disk): # (a,m) = (nb of subdivisions of phi, nb
     #deriving the range of values of phi and s
     ds = 2*framework.radius/m
     for k in range(0,a): #stops to a-1 : no projection for angle pi
+        phi = k*2*np.pi/a
+        thetaPhi = np.array([np.cos(phi),np.sin(phi)])
         for j in range(0,m): 
-            #for a given angle k*phi, a given length j*ds : compute the radon transform
-            
-                radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection((-framework.radius + j*ds)/scale)*disk.intensity)
+            #for a given angle phi, a given length j*ds : compute the radon transform
+                changeVariable = (-framework.radius + j*ds -np.dot(thetaPhi,disk.center))/scale
+                radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection(changeVariable)*disk.intensity)
             
     return radonMatrix
     
-def plotSinogram(framework,sinogram,title):
+def plotSinogram(framework,sinogram,plotTitle,imageInfo,save):
     #display the sinogram
     plt.imshow(sinogram, interpolation='bilinear', 
               cmap=cm.gist_gray, 
@@ -78,8 +80,10 @@ def plotSinogram(framework,sinogram,title):
     
     plt.xlabel('s',fontsize=10)
     plt.ylabel('phi',fontsize=10)
-    plt.title('Sinogram',fontsize=12, color='r')
-    plt.savefig(title + ".png")
+    plt.title(imageInfo,fontsize=12, color='r')
+    if save == 1:
+        plt.savefig(plotTitle + ".png")
+        
 
 def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY function on vecX interval
         integral = 0

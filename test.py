@@ -41,24 +41,33 @@ from project import *
 
 
 frame = Framework(0,0,5)
+saveImage=0
 a = 100 #nb of subdivisions of phi
 m = 1000 #nb of subdivisions of s
 
 #test Sinogram
-center2 = np.array([0,0]); radius2 = 1; intensity2 = 2;
+center2 = np.array([0,0]); radius2 = 2; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
 
 img1 = Image()
-img1.addDisk(C2)     
-center2 = np.array([1,1]); radius2 = 2; intensity2 = 4;
+#img1.addDisk(C2)     
+center2 = np.array([1,3]); radius2 = 1; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
-#img1.addDisk(C2)
+img1.addDisk(C2)
+center2 = np.array([-1,-3]); radius2 = 1; intensity2 = 2;
+C2 = Disk(center2, radius2, intensity2)
+img1.addDisk(C2)
 frame.addImage(img1)
 frame.setCurrentImage(0)
 
 sinoMatrix= np.zeros((a,m))
 sinoMatrix = sinogram(frame,a,m)
-plotSinogram(frame,sinoMatrix,"images/sinograms/centeredDisk2")
+imageInfo = ""
+for disk in frame.getCurrentImage().getListOfDisks():
+    imageInfo = imageInfo + ","+ str(disk.center)
+
+
+plotSinogram(frame,sinoMatrix,"images/sinograms/2SymmetricDisks4",imageInfo,saveImage)
 #test constantness of radonTransform for a disk
 test = np.copy(sinoMatrix)
 for k in range(1,np.shape(test)[0]):

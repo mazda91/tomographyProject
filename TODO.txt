@@ -2,15 +2,13 @@ Question 1)
  in Framework class : being able to choose the image from the imageList ! not from a function, otherwise the list has no interest                                                    
  in Framework class : display the current image
 
-optimize lengthLineIntersection ?
 
-save images
+check that, for increasing discretization, residual decreases
+check that, for n growing on and fixed discretization, residual rises (the more frequencies involved, the more points we need)
 
-at the end of sinogram function : retrieve radonTransform(done) + phi interval + s interval 
-why ? : providing them for the integrale function in moment function
-
-overload dotProduct operator
 
 in setCurrentImage : case if input order is greater than the length of the list 
+
+utiliser unittest 
 
 http://web.engr.oregonstate.edu/~sinisa/courses/OSU/ECE468/lectures/ECE468_15.pdf
