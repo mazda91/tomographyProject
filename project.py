@@ -46,34 +46,42 @@ class Disk:
         
  
 
-def sinogram(framework,a,m):
+def sinogram(globalFmw,truncFmw,a,m):
     sinoMatrix = np.zeros((a,m)) 
-    for disk in framework.getCurrentImage().getListOfDisks():
-        sinoMatrix = sinoMatrix + radonTransform(framework,a,m,disk)
+    for disk in truncFmw.getCurrentImage().getListOfDisks():
+        sinoMatrix = sinoMatrix + radonTransform(globalFmw,truncFmw,a,m,disk)
     return sinoMatrix
     
-def radonTransform(framework,a,m,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
+def radonTransform(globalFmw,truncFmw,a,m,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
     radonMatrix = np.zeros((a,m))
     scale = disk.radius
     disk.setRadius(1) #using formulae linking radon transform of a scaled disk with the rT on unit disk
     #deriving the range of values of phi and s
-    ds = 2*framework.radius/m
+    ds = 2*globalFmw.radius/m
     for k in range(0,a): #stops to a-1 : no projection for angle pi
-        phi = k*2*np.pi/a
+        phi = -np.pi/2 + k*np.pi/a
         thetaPhi = np.array([np.cos(phi),np.sin(phi)])
         for j in range(0,m): 
             #for a given angle phi, a given length j*ds : compute the radon transform
-                changeVariable = (-framework.radius + j*ds -np.dot(thetaPhi,disk.center))/scale
-                radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection(changeVariable)*disk.intensity)
-            
+            #formula for s to be in the FOV
+            sMinFOV = np.dot(np.array([truncFmw.xcenter,truncFmw.ycenter]),thetaPhi) - truncFmw.radius
+            sMaxFOV = sMinFOV + 2*truncFmw.radius
+            s = -globalFmw.radius + j*ds
+            if sMinFOV <= s <= sMaxFOV:#line at s intersects FOV ?
+                smax = np.dot(disk.getCenter(),thetaPhi) + scale
+                smin = np.dot(disk.getCenter(),thetaPhi) - scale
+                if (min(smin,smax) <= s <= max(smin,smax)): #line intersect the disk ?
+                    changeVariable = (s -np.dot(thetaPhi,disk.center))/scale
+                    radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection(changeVariable)*disk.intensity)  
+    disk.setRadius(scale)
     return radonMatrix
     
-def plotSinogram(framework,sinogram,plotTitle,imageInfo,save):
+def plotSinogram(globalFmw,truncFmw,sinogram,plotTitle,imageInfo,save):
     #display the sinogram
     plt.imshow(sinogram, interpolation='bilinear', 
-              cmap=cm.gist_gray, 
+              cmap=cm.gist_yarg, 
               origin='lower', 
-              extent=[-framework.radius,framework.radius,0,360],aspect='auto')
+              extent=[-globalFmw.radius,globalFmw.radius,-90,90],aspect='auto')
 
     plt.xticks(size = 8)
     plt.yticks(size = 8)

@@ -136,7 +136,7 @@
 
 \maketitle
 \section{New results}
-~~ As a reminder, for the last meeting, the sinogram has been derived for the unit disk only. Then, the idea was, using formulae relating the radon transform operator for a function $f$ and its scaled and translated variations $f_{D}$ and $f_{a}$ respectively, to derive sinograms for any disk. \\
+~~ As a reminder, for the last meeting, the sinogram has been derived for the unit disk only. Then, the idea was, using formulae relating the radon transform operator for a function $f$ and its scaled and translated variations $f_{r}$ and $f_{\textbf{a}}$ respectively, to derive sinograms for any disk. \\
 Here are presented a few results for simple examples.
 \subsection{Scaled and centered disk}
 \begin{figure}[h!]
@@ -158,16 +158,16 @@ As expected, the larger is the disk, the larger the sinogram we get, proportiona
    \end{minipage} \hfill
    \begin{minipage}[c]{.46\linewidth}
       \includegraphics[scale=0.5]{../images/sinograms/translatedUnitDiskCloseCenter1.png} 
-      \captionof{figure}{Centered disk, $r=2$}
+      \captionof{figure}{translated disk, $center=(0,1)$}
    \end{minipage}
 \end{figure}
 For a translated disk, the sinogram has a sinusoidal shape. This can be explained by the translation formula of the previous report. \\
-For any translation vector $a$, we have :
+For any translation vector $\textbf{a}=(a_{0},a_{1})$, we have :
 \begin{eqnarray*}
-\Re f_{a}(\phi,s) &=& \Re f(\phi,s-a.\alpha_{\phi}) \\
+\Re f_{\textbf{a}}(\phi,s) &=& \Re f(\phi,s-\textbf{a}.\alpha_{\phi}) \\
                  &=& \Re f(\phi,s-a_{0}*\cos\phi - a_{1}*\sin\phi)
 \end{eqnarray*}
-Thus, the translated sinogram is the result of the composition of $\Re(B_{1})$ (radon transform on the unit disk) with a sinusoidal function with parameters $(a_0,a_1)$. It means that, the  further from the center the translated disk is, the sharper is the sinogram. 
+Thus, the translated sinogram is the result of the composition of $\Re(B_{1})$ (radon transform on the unit disk) with a sinusoidal function with parameters $(a_0,a_1)$. It means that, the  further from the center the translated disk is, the sharper is the sinogram variation. 
 
 \subsection{Translated and scaled disk}
 \begin{figure}[h!]
@@ -181,7 +181,9 @@ Thus, the translated sinogram is the result of the composition of $\Re(B_{1})$ (
    \end{minipage}
 \end{figure}
 Here, we can clearly see the combination of both previous properties of the radon transform operator $\Re$. \\
-
+\[
+\Re f_{\textbf{a},r}(\phi,s) = r\times\Re f(\phi,\frac{s-\textbf{a}.\alpha_{\phi}}{r}) \\
+\]
 Then, one can obviously add several disks to the image, so that the obtained final sinogram would be the sum of each disk's sinogram.
 
 \subsection{Fancy results}
