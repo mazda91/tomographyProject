@@ -9,6 +9,12 @@ truncatedFrame = Framework(0,130,50)
 saveImage=0
 a = 100 #nb of subdivisions of phi
 m = 1000 #nb of subdivisions of s
+l = 1000 #nb of subdivisions of segment L
+xl = -40; xr = 40; lstep = (xr-xl)/l
+y0 = 100
+eps = 5
+
+L = np.array([(xl + i*lstep,y0) for i in range(0,l)])
 
 #build image
 img1 = Image()
@@ -28,8 +34,8 @@ truncatedFrame.addImage(img1)
 globalFrame.setCurrentImage(0)
 truncatedFrame.setCurrentImage(0)
 
-sinoMatrix = sinogram(globalFrame,globalFrame,a,m)
-truncsino = sinogram(globalFrame,truncatedFrame,a,m)
+sinoMatrix = sinogram(globalFrame,globalFrame,a,m,L)[0]
+truncsino, dccMatrix = sinogram(globalFrame,truncatedFrame,a,m,L)
 
 
 imageInfo = ""
@@ -38,6 +44,8 @@ for disk in globalFrame.getCurrentImage().getListOfDisks():
 
 plt.figure()
 plotSinogram(globalFrame,truncatedFrame,truncsino,"images/sinograms/2SymmetricDisks4",imageInfo,saveImage)
+plt.figure()
+plotSinogram(globalFrame,truncatedFrame,dccMatrix,"images/sinograms/2SymmetricDisks4",imageInfo,saveImage)
 #plotSinogram(globalFrame,globalFrame,sinoMatrix,"images/sinograms/2SymmetricDisks4",imageInfo,saveImage)
 #test constantness of radonTransform for a disk
 test = np.copy(sinoMatrix)

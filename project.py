@@ -46,13 +46,17 @@ class Disk:
         
  
 
-def sinogram(globalFmw,truncFmw,a,m):
+def sinogram(globalFmw,truncFmw,a,m,L):
     sinoMatrix = np.zeros((a,m)) 
+    dccMatrix = np.zeros((a,m))
     for disk in truncFmw.getCurrentImage().getListOfDisks():
-        sinoMatrix = sinoMatrix + radonTransform(globalFmw,truncFmw,a,m,disk)
-    return sinoMatrix
+        sinoMatrix = sinoMatrix + radonTransform(globalFmw,truncFmw,a,m,L,disk)[0]
+        dccMatrix = dccMatrix + radonTransform(globalFmw,truncFmw,a,m,L,disk)[1]
+    return sinoMatrix,dccMatrix
     
-def radonTransform(globalFmw,truncFmw,a,m,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
+def radonTransform(globalFmw,truncFmw,a,m,L,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
+    Lstart = L[0]; Lend= L[len(L)-1]; y0 = L[0,1]
+    dccMatrix = np.zeros((a,m))
     radonMatrix = np.zeros((a,m))
     scale = disk.radius
     disk.setRadius(1) #using formulae linking radon transform of a scaled disk with the rT on unit disk
@@ -73,8 +77,10 @@ def radonTransform(globalFmw,truncFmw,a,m,disk): # (a,m) = (nb of subdivisions o
                 if (min(smin,smax) <= s <= max(smin,smax)): #line intersect the disk ?
                     changeVariable = (s -np.dot(thetaPhi,disk.center))/scale
                     radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection(changeVariable)*disk.intensity)  
+                if(np.dot(Lstart,thetaPhi) <= s <= np.dot(Lend,thetaPhi)): #line intersect segment L ?
+                    dccMatrix[k,j] = radonMatrix[k,j]
     disk.setRadius(scale)
-    return radonMatrix
+    return radonMatrix, dccMatrix
     
 def plotSinogram(globalFmw,truncFmw,sinogram,plotTitle,imageInfo,save):
     #display the sinogram
