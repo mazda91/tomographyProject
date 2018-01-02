@@ -103,14 +103,16 @@ def B(framework,n,L,a,eps):
     l = L.shape[0]
     phi = np.arange((-np.pi/2)+eps,(np.pi/2)-eps,(np.pi-2*eps)/a)
     weight = np.tan(phi)**n / np.cos(phi)
-    vecProj = np.zeros((1,a))
-    res = np.zeros((1,l))
-    thetaPhi = np.array([(np.cos(phi),np.sin(phi))])
+    vecProj = np.zeros(a)
+    res = np.zeros(l)
+    thetaPhi = np.array([np.cos(phi),np.sin(phi)])
+    thetaPhi = thetaPhi.T
     
     for i in range(0,l):
+        vecProj = np.zeros(a)
         for k in range(0,a):
             for disk in framework.getCurrentImage().getListOfDisks():
-                vecProj[k] += projLine(np.dot(L[i],thetaPhi[:,k]),disk)    
+                vecProj[k] += projLine(np.dot(L[i],thetaPhi[k]),phi[k],disk)    
          
         res[i] = integrale(phi,vecProj*weight)
     return res

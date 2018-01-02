@@ -12,7 +12,7 @@ m = 1000 #nb of subdivisions of s
 l = 1000 #nb of subdivisions of segment L
 xl = -40; xr = 40; lstep = (xr-xl)/l
 y0 = 100
-eps = 5
+eps = 10
 
 L = np.array([(xl + i*lstep,y0) for i in range(0,l)])
 
@@ -53,11 +53,10 @@ for k in range(1,np.shape(test)[0]):
     test[k] = test[k] - test[0]
 test[0] = np.zeros(np.shape(test[0]))
 
-order = 0
+order = 2
 Bn = B(globalFrame,order,L,a,eps)
-phi = np.arange(-np.pi/2+eps,np.pi/2-eps,(np.pi-2*eps)/a)
 plt.figure()
-plt.plot(phi,Bn)
+plt.plot(L,Bn,"b.")
 
 
 
