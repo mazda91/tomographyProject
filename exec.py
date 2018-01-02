@@ -53,6 +53,11 @@ for k in range(1,np.shape(test)[0]):
     test[k] = test[k] - test[0]
 test[0] = np.zeros(np.shape(test[0]))
 
+order = 0
+Bn = B(globalFrame,order,L,a,eps)
+phi = np.arange(-np.pi/2+eps,np.pi/2-eps,(np.pi-2*eps)/a)
+plt.figure()
+plt.plot(phi,Bn)
 
 
 

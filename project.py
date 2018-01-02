@@ -44,8 +44,6 @@ class Disk:
         else:
             return 2*np.sqrt(self.radius**2 - s**2)
         
- 
-
 def sinogram(globalFmw,truncFmw,a,m,L):
     sinoMatrix = np.zeros((a,m)) 
     dccMatrix = np.zeros((a,m))
@@ -76,11 +74,14 @@ def radonTransform(globalFmw,truncFmw,a,m,L,disk): # (a,m) = (nb of subdivisions
                 smin = np.dot(disk.getCenter(),thetaPhi) - scale
                 if (min(smin,smax) <= s <= max(smin,smax)): #line intersect the disk ?
                     changeVariable = (s -np.dot(thetaPhi,disk.center))/scale
-                    radonMatrix[k,j] = radonMatrix[k,j] + scale*(disk.lengthLineIntersection(changeVariable)*disk.intensity)  
+                    radonMatrix[k,j] = radonMatrix[k,j] + scale*projLine(changeVariable,phi,disk)  
                 if(np.dot(Lstart,thetaPhi) <= s <= np.dot(Lend,thetaPhi)): #line intersect segment L ?
                     dccMatrix[k,j] = radonMatrix[k,j]
     disk.setRadius(scale)
     return radonMatrix, dccMatrix
+
+def projLine(s,phi,disk):
+    return disk.lengthLineIntersection(s)*disk.intensity
     
 def plotSinogram(globalFmw,truncFmw,sinogram,plotTitle,imageInfo,save):
     #display the sinogram
@@ -98,7 +99,22 @@ def plotSinogram(globalFmw,truncFmw,sinogram,plotTitle,imageInfo,save):
     if save == 1:
         plt.savefig(plotTitle + ".png")
         
-
+def B(framework,n,L,a,eps):
+    l = L.shape[0]
+    phi = np.arange((-np.pi/2)+eps,(np.pi/2)-eps,(np.pi-2*eps)/a)
+    weight = np.tan(phi)**n / np.cos(phi)
+    vecProj = np.zeros((1,a))
+    res = np.zeros((1,l))
+    thetaPhi = np.array([(np.cos(phi),np.sin(phi))])
+    
+    for i in range(0,l):
+        for k in range(0,a):
+            for disk in framework.getCurrentImage().getListOfDisks():
+                vecProj[k] += projLine(np.dot(L[i],thetaPhi[:,k]),disk)    
+         
+        res[i] = integrale(phi,vecProj*weight)
+    return res
+    
 def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY function on vecX interval
         integral = 0
         for i in range(0,len(vecX)-1):
@@ -138,4 +154,6 @@ def projectionMoment(phi,n,vecMoment): #n : order of the moment to be projected
         proj2 = projOnBasis(phi,vecMoment,vecSin)
         projRes = projRes + proj1 + proj2
     return projRes
-            
+    
+
+    
