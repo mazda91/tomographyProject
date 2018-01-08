@@ -8,9 +8,11 @@ globalFrame = Framework(0,0,150) #here to help emphasize the difference between 
 #the truncated one : the sinogram is computed only for the considered part, but displayed w.r.t the whole framework 
 #dimensions
 FOV = Framework(0,90,50)
-saveImage=0
+saveGlobalSinogram=0
+saveFOVSinogram=0
+saveDCC=1
 a = 100 #nb of subdivisions of phi
-m = 100 #nb of subdivisions of s
+m = 1000 #nb of subdivisions of s
 l = 1000 #nb of subdivisions of segment L
 xl = -40; xr = 40; lstep = (xr-xl)/l
 y0 = 100
@@ -25,9 +27,9 @@ img1 = Image()
 center2 = np.array([0,0]); radius2 = 80; intensity2 = 1;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)     
-center2 = np.array([10,30]); radius2 = 50; intensity2 = 2;
+center2 = np.array([2,0]); radius2 = 50; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
-    #img1.addDisk(C2)
+img1.addDisk(C2)
 center2 = np.array([-1,-3]); radius2 = 1; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
     #img1.addDisk(C2)
@@ -45,9 +47,9 @@ for disk in globalFrame.getCurrentImage().getListOfDisks():
     imageInfo = imageInfo + ","+ str(disk.center)
 
 plt.figure()
-plotSinogram(globalFrame,globalFrame,sinoMatrix,"images/sinograms/2SymmetricDisks4",imageInfo,saveImage)
+plotSinogram(globalFrame,globalFrame,sinoMatrix,"images/sinograms/2SymmetricDisks4",imageInfo,saveGlobalSinogram)
 plt.figure()
-plotSinogram(globalFrame,FOV,sinoFOV,"images/sinograms/2SymmetricDisks4",imageInfo,saveImage)
+plotSinogram(globalFrame,FOV,sinoFOV,"images/sinograms/2SymmetricDisks4",imageInfo,saveFOVSinogram)
 
 #test constantness of radonTransform for a disk
 test = np.copy(sinoMatrix)
@@ -58,7 +60,15 @@ test[0] = np.zeros(np.shape(test[0]))
 order = 3
 Bn = B(globalFrame,order,L,a,eps)
 plt.figure()
+plt.title("DCC for order " + str(order),fontsize=12, color='r')
 plt.plot(L,Bn,"b.")
 
+#test polyfit
+Lx = L[:,0]
+polyCoeffs = np.polyfit(Lx,Bn,order)
+approx = np.poly1d(polyCoeffs)(Lx)
+plt.plot(Lx,approx,"ro")
 
-
+if saveDCC == 1:
+        plt.savefig("images/dcc/DCC" + str(order))
+print(np.linalg.norm(Bn-approx))
