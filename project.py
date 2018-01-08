@@ -38,57 +38,50 @@ class Disk:
         self.intensity = intensity
         
         
-    def lengthLineIntersection(self,s):
-        if abs(s) > self.radius:
+    def lengthLineIntersection(self,s,phi):
+        thetaPhi = np.array([np.cos(phi),np.sin(phi)])
+        if abs(s-np.dot(self.center,thetaPhi)) > self.radius:
             return 0
         else:
-            return 2*np.sqrt(self.radius**2 - s**2)
+            return 2*np.sqrt(self.radius**2 - (s-np.dot(self.center,thetaPhi))**2)
         
-def sinogram(globalFmw,truncFmw,a,m,L):
-    sinoMatrix = np.zeros((a,m)) 
-    dccMatrix = np.zeros((a,m))
-    for disk in truncFmw.getCurrentImage().getListOfDisks():
-        sinoMatrix = sinoMatrix + radonTransform(globalFmw,truncFmw,a,m,L,disk)[0]
-        dccMatrix = dccMatrix + radonTransform(globalFmw,truncFmw,a,m,L,disk)[1]
-    return sinoMatrix,dccMatrix
+def sinogram(globalFmw,FOV,a,m,L):
+    sinoFOV = np.zeros((a,m)) 
+    for disk in FOV.getCurrentImage().getListOfDisks():
+        sinoFOV = sinoFOV + radonTransform(globalFmw,FOV,a,m,L,disk)
+    return sinoFOV
     
-def radonTransform(globalFmw,truncFmw,a,m,L,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
+def radonTransform(globalFmw,FOV,a,m,L,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
     Lstart = L[0]; Lend= L[len(L)-1]; y0 = L[0,1]
-    dccMatrix = np.zeros((a,m))
     radonMatrix = np.zeros((a,m))
     scale = disk.radius
     disk.setRadius(1) #using formulae linking radon transform of a scaled disk with the rT on unit disk
     #deriving the range of values of phi and s
-    ds = 2*globalFmw.radius/m
+    ds = 2*FOV.radius/m
     for k in range(0,a): #stops to a-1 : no projection for angle pi
         phi = -np.pi/2 + k*np.pi/a
         thetaPhi = np.array([np.cos(phi),np.sin(phi)])
         for j in range(0,m): 
             #for a given angle phi, a given length j*ds : compute the radon transform
             #formula for s to be in the FOV
-            sMinFOV = np.dot(np.array([truncFmw.xcenter,truncFmw.ycenter]),thetaPhi) - truncFmw.radius
-            sMaxFOV = sMinFOV + 2*truncFmw.radius
-            s = -globalFmw.radius + j*ds
-            if sMinFOV <= s <= sMaxFOV:#line at s intersects FOV ?
-                smax = np.dot(disk.getCenter(),thetaPhi) + scale
-                smin = np.dot(disk.getCenter(),thetaPhi) - scale
-                if (min(smin,smax) <= s <= max(smin,smax)): #line intersect the disk ?
-                    changeVariable = (s -np.dot(thetaPhi,disk.center))/scale
-                    radonMatrix[k,j] = radonMatrix[k,j] + scale*projLine(changeVariable,phi,disk)  
-                if(np.dot(Lstart,thetaPhi) <= s <= np.dot(Lend,thetaPhi)): #line intersect segment L ?
-                    dccMatrix[k,j] = radonMatrix[k,j]
+            sMinFOV = np.dot(np.array([FOV.xcenter,FOV.ycenter]),thetaPhi) - FOV.radius
+            sMaxFOV = sMinFOV + 2*FOV.radius
+            s = sMinFOV + j*ds
+            changeVariable = (s -np.dot(thetaPhi,disk.center))/scale
+            #if(np.dot(Lstart,thetaPhi) <= s <= np.dot(Lend,thetaPhi)): #line intersect segment L ?
+            radonMatrix[k,j] = radonMatrix[k,j] + scale*projLine(changeVariable,phi,disk)  
     disk.setRadius(scale)
-    return radonMatrix, dccMatrix
+    return radonMatrix
 
 def projLine(s,phi,disk):
-    return disk.lengthLineIntersection(s)*disk.intensity
+    return disk.lengthLineIntersection(s,phi)*disk.intensity
     
-def plotSinogram(globalFmw,truncFmw,sinogram,plotTitle,imageInfo,save):
+def plotSinogram(globalFmw,FOV,sinogram,plotTitle,imageInfo,save):
     #display the sinogram
     plt.imshow(sinogram, interpolation='bilinear', 
               cmap=cm.gist_yarg, 
               origin='lower', 
-              extent=[-globalFmw.radius,globalFmw.radius,-90,90],aspect='auto')
+              extent=[-FOV.radius,FOV.radius,-90,90],aspect='auto')
 
     plt.xticks(size = 8)
     plt.yticks(size = 8)

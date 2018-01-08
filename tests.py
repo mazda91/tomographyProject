@@ -26,7 +26,7 @@ class SinoGramTest(unittest.TestCase):
         self.frame.addImage(img1)
     def test_lengthLineIntersection(self):
         """teste le fonctionnement de lengthLineIntersection"""
-        res = self.disk.lengthLineIntersection(0)
+        res = self.disk.lengthLineIntersection(0,0)
         self.assertEqual(res, 4)
         
     def test_integrale(self):
