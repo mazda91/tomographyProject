@@ -38,12 +38,18 @@ class Disk:
         self.intensity = intensity
         
         
+#    def lengthLineIntersection(self,s,phi):
+#        thetaPhi = np.array([np.cos(phi),np.sin(phi)])
+#        if abs(s-np.dot(self.center,thetaPhi)) > self.radius:
+#            return 0
+#        else:
+#            return 2*np.sqrt(self.radius**2 - (s-np.dot(self.center,thetaPhi))**2)
+        
     def lengthLineIntersection(self,s,phi):
-        thetaPhi = np.array([np.cos(phi),np.sin(phi)])
-        if abs(s-np.dot(self.center,thetaPhi)) > self.radius:
+        if abs(s) > self.radius:
             return 0
         else:
-            return 2*np.sqrt(self.radius**2 - (s-np.dot(self.center,thetaPhi))**2)
+            return 2*np.sqrt(self.radius**2 - s**2)
         
 def sinogram(globalFmw,FOV,a,m,eps):
     sinoFOV = np.zeros((a,m)) 

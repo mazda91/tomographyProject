@@ -26,7 +26,7 @@ img1 = Image()
 center2 = np.array([0,0]); radius2 = 80; intensity2 = 1;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)     
-center2 = np.array([2,0]); radius2 = 40; intensity2 = 2;
+center2 = np.array([40,0]); radius2 = 40; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)
 center2 = np.array([-1,-3]); radius2 = 1; intensity2 = 2;
@@ -56,7 +56,7 @@ for k in range(1,np.shape(test)[0]):
     test[k] = test[k] - test[0]
 test[0] = np.zeros(np.shape(test[0]))
 
-order = 0
+order = 4
 phi = np.arange((-np.pi/2)+eps,(np.pi/2)-eps,(np.pi-2*eps)/a)
 Bn = np.zeros((L.shape[0]))
 for x in range(0,L.shape[0]):
