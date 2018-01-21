@@ -18,27 +18,36 @@ y0 = 100
 eps = 10*np.pi/180
 
 L = np.array([(xl + i*lstep,y0) for i in range(0,l)])
-
+move = 1 #motion of the most intense disks
+translation = np.array([10,10])
+nbMotions = 5
 #build image
 img1 = Image()
 
 #set of disks
+#disk1
 center2 = np.array([0,0]); radius2 = 80; intensity2 = 1;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)     
+#disk2
 center2 = np.array([40,0]); radius2 = 40; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)
-center2 = np.array([-1,-3]); radius2 = 1; intensity2 = 2;
+#disk3
+center2 = np.array([-20,10]); radius2 = 30; intensity2 = 4;
 C2 = Disk(center2, radius2, intensity2)
-    #img1.addDisk(C2)
+img1.addDisk(C2)
+#disk4
+center2 = np.array([0,-40]); radius2 = 50; intensity2 = 8;
+C2 = Disk(center2, radius2, intensity2)
+img1.addDisk(C2)
 globalFrame.addImage(img1)
 FOV.addImage(img1)
 globalFrame.setCurrentImage(0)
 FOV.setCurrentImage(0)
 
-sinoMatrix = sinogram(globalFrame,globalFrame,a,m,eps)
-sinoFOV = sinogram(globalFrame,FOV,a,m,eps)
+sinoMatrix = sinogram(globalFrame,globalFrame,a,m,eps,move,translation,nbMotions)
+sinoFOV = sinogram(globalFrame,FOV,a,m,eps,move,translation,nbMotions)
 
 
 imageInfo = ""

@@ -51,19 +51,29 @@ class Disk:
         else:
             return 2*np.sqrt(self.radius**2 - s**2)
         
-def sinogram(globalFmw,FOV,a,m,eps):
+def sinogram(globalFmw,FOV,a,m,eps,move,translation,nbMotions):
     sinoFOV = np.zeros((a,m)) 
-    for disk in FOV.getCurrentImage().getListOfDisks():
-        sinoFOV = sinoFOV + radonTransform(globalFmw,FOV,a,m,disk,eps)
+    listOfDisks = FOV.getCurrentImage().getListOfDisks()
+    highestIntensity = np.array([listOfDisks[i].getIntensity() for i in range(0,len(listOfDisks))]).argmax()
+    for index_disk in range(0,len(listOfDisks)):
+        if index_disk != highestIntensity:
+            sinoFOV = sinoFOV + radonTransform(globalFmw,FOV,a,m,listOfDisks[index_disk],eps,0,translation,nbMotions)
+        else:
+            sinoFOV = sinoFOV + radonTransform(globalFmw,FOV,a,m,listOfDisks[index_disk],eps,move,translation,nbMotions)
+        
     return sinoFOV
     
-def radonTransform(globalFmw,FOV,a,m,disk,eps): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
+def radonTransform(globalFmw,FOV,a,m,disk,eps,move,translation,nbMotions): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
     radonMatrix = np.zeros((a,m))
     scale = disk.radius
     disk.setRadius(1) #using formulae linking radon transform of a scaled disk with the rT on unit disk
     #deriving the range of values of phi and s
     ds = 2*FOV.radius/m
+    randMotions = np.random.random_integers(0,a,nbMotions)
     for k in range(0,a): #stops to a-1 : no projection for angle pi
+        if move == 1:
+            if np.any(randMotions == k):
+                disk.setCenter(disk.getCenter() + translation)
         phi = -np.pi/2 + eps + k*(np.pi-2*eps)/a
         thetaPhi = np.array([np.cos(phi),np.sin(phi)])
         for j in range(0,m): 
