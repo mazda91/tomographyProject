@@ -10,9 +10,9 @@ FOV = Framework(0,90,50)
 saveGlobalSinogram=0
 saveFOVSinogram=0
 saveDCC=0
-a = 1000 #nb of subdivisions of phi
-m = 1000 #nb of subdivisions of s
-l = 1000 #nb of subdivisions of segment L
+a = 100 #nb of subdivisions of phi
+m = 100 #nb of subdivisions of s
+l = 100 #nb of subdivisions of segment L
 xl = -40; xr = 40; lstep = (xr-xl)/l
 y0 = 100
 eps = 10*np.pi/180
@@ -26,7 +26,7 @@ img1 = Image()
 center2 = np.array([0,0]); radius2 = 80; intensity2 = 1;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)     
-center2 = np.array([2,0]); radius2 = 50; intensity2 = 2;
+center2 = np.array([2,0]); radius2 = 40; intensity2 = 2;
 C2 = Disk(center2, radius2, intensity2)
 img1.addDisk(C2)
 center2 = np.array([-1,-3]); radius2 = 1; intensity2 = 2;
