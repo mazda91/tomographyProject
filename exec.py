@@ -3,15 +3,14 @@ import framework
 from project import *
 
 
-
 globalFrame = Framework(0,0,150) #here to help emphasize the difference between the complete sinogram and 
 #the truncated one : the sinogram is computed only for the considered part, but displayed w.r.t the whole framework 
 #dimensions
 FOV = Framework(0,90,50)
 saveGlobalSinogram=0
 saveFOVSinogram=0
-saveDCC=1
-a = 100 #nb of subdivisions of phi
+saveDCC=0
+a = 1000 #nb of subdivisions of phi
 m = 1000 #nb of subdivisions of s
 l = 1000 #nb of subdivisions of segment L
 xl = -40; xr = 40; lstep = (xr-xl)/l
@@ -38,8 +37,8 @@ FOV.addImage(img1)
 globalFrame.setCurrentImage(0)
 FOV.setCurrentImage(0)
 
-sinoMatrix = sinogram(globalFrame,globalFrame,a,m,L)
-sinoFOV = sinogram(globalFrame,FOV,a,m,L)
+sinoMatrix = sinogram(globalFrame,globalFrame,a,m,eps)
+sinoFOV = sinogram(globalFrame,FOV,a,m,eps)
 
 
 imageInfo = ""
@@ -57,8 +56,12 @@ for k in range(1,np.shape(test)[0]):
     test[k] = test[k] - test[0]
 test[0] = np.zeros(np.shape(test[0]))
 
-order = 3
-Bn = B(globalFrame,order,L,a,eps)
+order = 0
+phi = np.arange((-np.pi/2)+eps,(np.pi/2)-eps,(np.pi-2*eps)/a)
+Bn = np.zeros((L.shape[0]))
+for x in range(0,L.shape[0]):
+    Bn[x] = B(FOV,sinoFOV,order,L[x],phi)    
+
 plt.figure()
 plt.title("DCC for order " + str(order),fontsize=12, color='r')
 plt.plot(L,Bn,"b.")
@@ -67,7 +70,7 @@ plt.plot(L,Bn,"b.")
 Lx = L[:,0]
 polyCoeffs = np.polyfit(Lx,Bn,order)
 approx = np.poly1d(polyCoeffs)(Lx)
-plt.plot(Lx,approx,"ro")
+plt.plot(Lx,approx,"r.")
 
 if saveDCC == 1:
         plt.savefig("images/dcc/DCC" + str(order))

@@ -45,30 +45,27 @@ class Disk:
         else:
             return 2*np.sqrt(self.radius**2 - (s-np.dot(self.center,thetaPhi))**2)
         
-def sinogram(globalFmw,FOV,a,m,L):
+def sinogram(globalFmw,FOV,a,m,eps):
     sinoFOV = np.zeros((a,m)) 
     for disk in FOV.getCurrentImage().getListOfDisks():
-        sinoFOV = sinoFOV + radonTransform(globalFmw,FOV,a,m,L,disk)
+        sinoFOV = sinoFOV + radonTransform(globalFmw,FOV,a,m,disk,eps)
     return sinoFOV
     
-def radonTransform(globalFmw,FOV,a,m,L,disk): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)    
-    Lstart = L[0]; Lend= L[len(L)-1]; y0 = L[0,1]
+def radonTransform(globalFmw,FOV,a,m,disk,eps): # (a,m) = (nb of subdivisions of phi, nb of subdivisions of s)
     radonMatrix = np.zeros((a,m))
     scale = disk.radius
     disk.setRadius(1) #using formulae linking radon transform of a scaled disk with the rT on unit disk
     #deriving the range of values of phi and s
     ds = 2*FOV.radius/m
     for k in range(0,a): #stops to a-1 : no projection for angle pi
-        phi = -np.pi/2 + k*np.pi/a
+        phi = -np.pi/2 + eps + k*(np.pi-2*eps)/a
         thetaPhi = np.array([np.cos(phi),np.sin(phi)])
         for j in range(0,m): 
             #for a given angle phi, a given length j*ds : compute the radon transform
             #formula for s to be in the FOV
             sMinFOV = np.dot(np.array([FOV.xcenter,FOV.ycenter]),thetaPhi) - FOV.radius
-            sMaxFOV = sMinFOV + 2*FOV.radius
             s = sMinFOV + j*ds
             changeVariable = (s -np.dot(thetaPhi,disk.center))/scale
-            #if(np.dot(Lstart,thetaPhi) <= s <= np.dot(Lend,thetaPhi)): #line intersect segment L ?
             radonMatrix[k,j] = radonMatrix[k,j] + scale*projLine(changeVariable,phi,disk)  
     disk.setRadius(scale)
     return radonMatrix
@@ -91,24 +88,32 @@ def plotSinogram(globalFmw,FOV,sinogram,plotTitle,imageInfo,save):
     plt.title(imageInfo,fontsize=12, color='r')
     if save == 1:
         plt.savefig(plotTitle + ".png")
-        
-def B(framework,n,L,a,eps):
-    l = L.shape[0]
-    phi = np.arange((-np.pi/2)+eps,(np.pi/2)-eps,(np.pi-2*eps)/a)
-    weight = np.tan(phi)**n / np.cos(phi)
-    vecProj = np.zeros(a)
-    res = np.zeros(l)
-    thetaPhi = np.array([np.cos(phi),np.sin(phi)])
+
+def linearInterpolation(x,vecX):
+    idx = np.abs(vecX - x).argmin()
+    id_middle = int(idx/2)
+    if (x-vecX[idx])<0:
+        idx -=1
+    coeff = 1. - abs(x-vecX[idx])/(vecX[id_middle+1]-vecX[id_middle])
+    return idx,coeff
+    
+def B(framework,sinoGrid,n,x,vecPhi):
+    a = sinoGrid.shape[0]
+    m = sinoGrid.shape[1]
+    ds = 2*framework.radius/m
+    weight = np.tan(vecPhi)**n / np.cos(vecPhi)
+    vecProj = np.zeros(vecPhi.shape[0])
+    thetaPhi = np.array([np.cos(vecPhi),np.sin(vecPhi)])
     thetaPhi = thetaPhi.T
     
-    for i in range(0,l):
-        vecProj = np.zeros(a)
-        for k in range(0,a):
-            for disk in framework.getCurrentImage().getListOfDisks():
-                vecProj[k] += projLine(np.dot(L[i],thetaPhi[k]),phi[k],disk)    
-         
-        res[i] = integrale(phi,vecProj*weight)
-    return res
+    for k in range(0,a):
+        s = np.dot(x,thetaPhi[k])
+        sMin = np.dot(np.array([framework.xcenter,framework.ycenter]),thetaPhi[k]) - framework.radius
+        sMax = sMin + 2*framework.radius
+        vecS = np.arange(sMin,sMax,ds)
+        (index_closest,linear_coeff) = linearInterpolation(s,vecS)
+        vecProj[k] = linear_coeff*sinoGrid[k,index_closest] + (1-linear_coeff)*sinoGrid[k,index_closest+1]
+    return integrale(vecPhi,vecProj*weight)
     
 def integrale(vecX,vecY): #returns the integrale(trapeze formula) of vecY function on vecX interval
         integral = 0

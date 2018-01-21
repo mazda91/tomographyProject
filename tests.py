@@ -17,7 +17,7 @@ class SinoGramTest(unittest.TestCase):
         self.frame = Framework(0,0,5)
         self.a = 100 #nb of subdivisions of phi
         self.m = 1000 #nb of subdivisions of s
-        
+        self.vecX = np.arange(0,1,0.1)
         #define an image in the framework
         img1 = Image()
         center1 = np.array([0,0]); radius1 = 2; intensity1 = 2;
@@ -44,6 +44,9 @@ class SinoGramTest(unittest.TestCase):
         vecQ = np.sin(6*phi)
         res = trigoDotProduct(phi,vecP,vecQ)
         self.assertTrue(abs(res) <= 10**-10)
+        
+    def test_linearInterpolation(self):
+        self.assertEqual((6,0.5),linearInterpolation(0.65,self.vecX))
     
  
         
